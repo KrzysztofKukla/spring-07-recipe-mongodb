@@ -3,15 +3,7 @@ package guru.springframework.recipe.domain;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.util.Set;
 
 /**
@@ -33,8 +25,6 @@ public class Recipe {
     private String source;
     private String url;
     private String directions;
-    //TODO
-//    private Difficulty difficulty;
 
     //LAZY is by default to OneToMany
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe" , fetch = FetchType.LAZY)
@@ -45,6 +35,10 @@ public class Recipe {
     //binary large object filed (BLOB)
     @Lob
     private Byte[] image;
+
+    // ORDINAL is default ( is number ) and will be change when we will put something between them
+    @Enumerated(value = EnumType.STRING)
+    private Difficulty difficulty;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Notes notes;
