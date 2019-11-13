@@ -9,7 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import java.util.Set;
 
 /**
  * @author Krzysztof Kukla
@@ -32,6 +34,10 @@ public class Recipe {
     private String directions;
     //TODO
 //    private Difficulty difficulty;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
+    //Set in preferred to have unique objects
+    private Set<Ingredient> ingredients;
 
     //large object
     //binary large object filed (BLOB)
