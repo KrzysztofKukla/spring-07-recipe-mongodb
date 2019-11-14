@@ -1,5 +1,6 @@
 package guru.springframework.recipe.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -44,6 +45,7 @@ public class Recipe {
     private Difficulty difficulty;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @Setter(AccessLevel.NONE)
     private Notes notes;
 
     @ManyToMany
@@ -52,4 +54,16 @@ public class Recipe {
         inverseJoinColumns = @JoinColumn(name="category_id")
     )
     private Set<Category> categories = new HashSet<>();
+
+    public void setNotes(Notes notes) {
+        this.notes = notes;
+        notes.setRecipe(this);
+    }
+
+    public Recipe addIngredient(Ingredient ingredient){
+        ingredient.setRecipe(this);
+        this.ingredients.add(ingredient);
+        return this;
+    }
+
 }
