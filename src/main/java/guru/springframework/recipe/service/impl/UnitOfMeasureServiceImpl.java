@@ -19,7 +19,7 @@ public class UnitOfMeasureServiceImpl implements UnitOfMeasureService {
     @Override
     public UnitOfMeasure findByDescription(String description) {
         Optional<UnitOfMeasure> byDescription = unitOfMeasureRepository.findByDescription(description);
-        return byDescription.orElseThrow(()->new RuntimeException("Unit of measure does not exist"));
+        return byDescription.orElseThrow(()->new RuntimeException("Unit of measure does not exist-> "+description));
     }
 
 }

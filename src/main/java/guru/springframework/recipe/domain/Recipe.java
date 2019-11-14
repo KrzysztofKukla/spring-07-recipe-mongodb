@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -24,12 +25,14 @@ public class Recipe {
     private Integer servings;
     private String source;
     private String url;
+
+    @Lob
     private String directions;
 
     //LAZY is by default to OneToMany
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe" , fetch = FetchType.LAZY)
     //Set in preferred to have unique objects
-    private Set<Ingredient> ingredients;
+    private Set<Ingredient> ingredients = new HashSet<>();
 
     //large object
     //binary large object filed (BLOB)
@@ -48,5 +51,5 @@ public class Recipe {
         joinColumns = @JoinColumn(name = "recipe_id"),
         inverseJoinColumns = @JoinColumn(name="category_id")
     )
-    private Set<Category> categories;
+    private Set<Category> categories = new HashSet<>();
 }
