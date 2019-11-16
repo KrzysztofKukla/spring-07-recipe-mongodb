@@ -1,8 +1,7 @@
 package guru.springframework.recipe.domain;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,9 +14,10 @@ import java.util.Set;
  * @author Krzysztof Kukla
  */
 @Entity
-@Getter
-@Setter
-@ToString
+@Data
+
+//because we have circular reference in Category and Recipe entities we have to avoid in one of them in equalsAndHashCode method
+@EqualsAndHashCode(exclude = {"recipes"})
 public class Category {
 
     @Id

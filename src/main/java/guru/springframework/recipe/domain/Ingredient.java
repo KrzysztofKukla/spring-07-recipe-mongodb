@@ -1,9 +1,8 @@
 package guru.springframework.recipe.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,8 +17,9 @@ import java.math.BigDecimal;
  * @author Krzysztof Kukla
  */
 @Entity
-@Getter
-@Setter
+@Data
+//because we have circular reference in Category and Recipe entities we have to avoid in one of them in equalsAndHashCode method
+@EqualsAndHashCode(exclude = {"recipe"})
 @NoArgsConstructor
 public class Ingredient {
 

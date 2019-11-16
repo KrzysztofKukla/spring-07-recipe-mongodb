@@ -6,16 +6,15 @@ import guru.springframework.recipe.domain.Ingredient;
 import guru.springframework.recipe.domain.Notes;
 import guru.springframework.recipe.domain.Recipe;
 import guru.springframework.recipe.domain.UnitOfMeasure;
-import guru.springframework.recipe.repository.CategoryRepository;
-import guru.springframework.recipe.repository.RecipeRepository;
-import guru.springframework.recipe.repository.UnitOfMeasureRepository;
 import guru.springframework.recipe.service.CategoryService;
 import guru.springframework.recipe.service.RecipeService;
 import guru.springframework.recipe.service.UnitOfMeasureService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -26,6 +25,7 @@ import java.util.List;
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
     private final CategoryService categoryService;
@@ -33,6 +33,8 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
     private final UnitOfMeasureService unitOfMeasureService;
 
     @Override
+    //to avoid LazyInitializationException
+    @Transactional
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         recipeService.saveAll(getRecipes());
     }

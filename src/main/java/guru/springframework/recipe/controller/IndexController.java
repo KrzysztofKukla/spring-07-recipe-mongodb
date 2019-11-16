@@ -6,6 +6,7 @@ import guru.springframework.recipe.service.CategoryService;
 import guru.springframework.recipe.service.RecipeService;
 import guru.springframework.recipe.service.UnitOfMeasureService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class IndexController {
 
     private final CategoryService categoryService;

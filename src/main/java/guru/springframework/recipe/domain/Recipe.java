@@ -1,7 +1,7 @@
 package guru.springframework.recipe.domain;
 
 import lombok.AccessLevel;
-import lombok.Getter;
+import lombok.Data;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -12,8 +12,7 @@ import java.util.Set;
  * @author Krzysztof Kukla
  */
 @Entity
-@Getter
-@Setter
+@Data
 public class Recipe {
 
     @Id
