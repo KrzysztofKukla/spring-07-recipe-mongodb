@@ -74,6 +74,42 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+			<!-- maven-surefire-plugin is configured by default, so we don't need to do it manually like below
+				it allows to run unit tests
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version></version>
+			</plugin>
+			-->
+
+			<!-- maven-surefire-plugin is used to run Integration tests ( IT )
+				and we need to configure it like below -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.20</version>
+				<configuration>
+					<includes>
+						<include>**/*IT.java</include>
+					</includes>
+					<additionalClasspathElements>
+						<additionalClasspathElement>${basedir}/target/classes</additionalClasspathElement>
+					</additionalClasspathElements>
+					<parallel>none</parallel>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<!-- this allows Maven to be able find classes -->
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 
