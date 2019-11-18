@@ -9,6 +9,7 @@ import guru.springframework.recipe.service.UnitOfMeasureService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
@@ -61,13 +62,16 @@ class IndexControllerTest {
         BDDMockito.when(categoryService.findByDescription(categoryDescription)).thenReturn(category);
         BDDMockito.when(unitOfMeasureService.findByDescription(unitOfMeasureDescription)).thenReturn(unitOfMeasure);
 
+        ArgumentCaptor<Set<Recipe>> argumentCaptor = ArgumentCaptor.forClass(Set.class);
+
         Assertions.assertEquals("index", indexController.index(model));
         BDDMockito.then(recipeService).should().findAll();
         BDDMockito.then(categoryService).should().findByDescription(ArgumentMatchers.anyString());
         BDDMockito.then(unitOfMeasureService).should().findByDescription(ArgumentMatchers.anyString());
         BDDMockito.then(model).should(BDDMockito.times(1))
             .addAttribute(ArgumentMatchers.matches("recipes"), ArgumentMatchers.anySet());
-
+        BDDMockito.then(model).should().addAttribute(ArgumentMatchers.matches("recipes"), argumentCaptor.capture());
+        Assertions.assertEquals(recipes.size(), argumentCaptor.getValue().size());
     }
 
 }
