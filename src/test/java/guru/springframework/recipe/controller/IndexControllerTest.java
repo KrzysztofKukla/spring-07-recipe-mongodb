@@ -14,6 +14,10 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 
 import java.util.Arrays;
@@ -46,7 +50,7 @@ class IndexControllerTest {
     }
 
     @Test
-    void index() {
+    void testIndexPage() {
         Recipe first = Recipe.builder().id(1L).description("first Descriptuion").build();
         Recipe second = Recipe.builder().id(2L).description("second Descriptuion").build();
         Recipe third = Recipe.builder().id(3L).description("third Descriptuion").build();
@@ -72,6 +76,15 @@ class IndexControllerTest {
             .addAttribute(ArgumentMatchers.matches("recipes"), ArgumentMatchers.anySet());
         BDDMockito.then(model).should().addAttribute(ArgumentMatchers.matches("recipes"), argumentCaptor.capture());
         Assertions.assertEquals(recipes.size(), argumentCaptor.getValue().size());
+    }
+
+    @Test
+    void testMockMvc() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(indexController).build();
+        mockMvc.perform(MockMvcRequestBuilders.get("/"))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect((MockMvcResultMatchers.view().name("index")));
+
     }
 
 }
