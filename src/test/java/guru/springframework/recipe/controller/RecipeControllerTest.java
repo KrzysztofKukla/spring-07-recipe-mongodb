@@ -1,6 +1,8 @@
 package guru.springframework.recipe.controller;
 
+import guru.springframework.recipe.domain.Recipe;
 import guru.springframework.recipe.service.RecipeService;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,15 +37,16 @@ class RecipeControllerTest {
 
     @Test
     void findById() throws Exception {
+        Long id = 1L;
+        Recipe recipe = Recipe.builder().id(id).build();
+
+        BDDMockito.when(recipeService.findById(id)).thenReturn(recipe);
+
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/show/1"))
             .andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(MockMvcResultMatchers.view().name("recipe/show"));
-//            .andExpect(MockMvcResultMatchers.model().attributeExists("recipe"));
-
+            .andExpect(MockMvcResultMatchers.view().name("recipe/show"))
+            .andExpect(MockMvcResultMatchers.model().attribute("recipe", Matchers.any(Recipe.class)));
         BDDMockito.then(recipeService).should().findById(ArgumentMatchers.anyLong());
-
-//        .andExpect(MockMvcResultMatchers.model().attribute("owners", owners))
-
     }
 
 }
