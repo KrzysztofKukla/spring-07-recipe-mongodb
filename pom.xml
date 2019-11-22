@@ -16,6 +16,7 @@
 
 	<properties>
 		<java.version>1.8</java.version>
+		<maven-test-plugin.version>2.22.2</maven-test-plugin.version>
 	</properties>
 
 	<dependencies>
@@ -85,21 +86,20 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 
-			<!-- maven-surefire-plugin is configured by default, so we don't need to do it manually like below
-				it allows to run unit tests
+<!--			maven-surefire-plugin is configured by default, so we don't need to do it manually like below-->
+<!--				it allows to run unit tests-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version></version>
+				<version>${maven-test-plugin.version}</version>
 			</plugin>
-			-->
 
 			<!-- maven-surefire-plugin is used to run Integration tests ( IT )
 				and we need to configure it like below -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>2.20</version>
+				<version>${maven-test-plugin.version}</version>
 				<configuration>
 					<includes>
 						<include>**/*IT.java</include>
