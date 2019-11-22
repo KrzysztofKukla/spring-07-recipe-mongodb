@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -18,6 +17,11 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class RecipeServiceImpl implements RecipeService {
     private final RecipeRepository recipeRepository;
+
+    @Override
+    public Recipe findById(Long id) {
+        return recipeRepository.findById(id).orElseThrow(() -> new RuntimeException("Recipe does not exist"));
+    }
 
     @Override
     public Set<Recipe> findAll() {
