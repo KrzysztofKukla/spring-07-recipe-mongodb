@@ -63,7 +63,7 @@ public class RecipeServiceImpl implements RecipeService {
     //so if we do lazy loaded properties we'll receive LazyInitializationException
     @Transactional
     @Override
-    public RecipeCommand getRecipeCommandById(Long id) {
+    public RecipeCommand findRecipeCommandById(Long id) {
         return recipeToRecipeCommand.convert(getRecipe(id));
     }
 
