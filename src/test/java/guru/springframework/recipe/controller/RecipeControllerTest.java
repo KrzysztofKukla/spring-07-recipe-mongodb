@@ -12,6 +12,7 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -43,7 +44,7 @@ class RecipeControllerTest {
 
         BDDMockito.when(recipeService.findById(id)).thenReturn(recipe);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/show/1"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/show"))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.view().name("recipe/show"))
             .andExpect(MockMvcResultMatchers.model().attribute("recipe", Matchers.any(Recipe.class)));
@@ -59,12 +60,29 @@ class RecipeControllerTest {
     }
 
     @Test
-    void saveOrUpdate() throws Exception {
+    void updateRecipeTest() throws Exception {
+        long id = 1L;
+        RecipeCommand recipeCommand = RecipeCommand.builder().id(id).description("description").build();
+
+        BDDMockito.when(recipeService.findCommandById(id)).thenReturn(recipeCommand);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/update"))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.model().attribute("recipe", Matchers.any(RecipeCommand.class)))
+            .andExpect(MockMvcResultMatchers.view().name("/recipe/recipeForm"));
+        BDDMockito.then(recipeService).should().findCommandById(ArgumentMatchers.anyLong());
+    }
+
+    @Test
+    void testPostNewRecipeForm() throws Exception {
         RecipeCommand recipeCommand = RecipeCommand.builder().id(1L).build();
 
         BDDMockito.when(recipeService.saveRecipeCommand(ArgumentMatchers.any(RecipeCommand.class))).thenReturn(recipeCommand);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/recipe"))
+        mockMvc.perform(MockMvcRequestBuilders.post("/recipe")
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .param("id", "")
+            .param("description", "description"))
             .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
             .andExpect(MockMvcResultMatchers.view().name("redirect:/recipe/show/" + recipeCommand.getId()));
         BDDMockito.then(recipeService).should().saveRecipeCommand(ArgumentMatchers.any(RecipeCommand.class));

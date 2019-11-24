@@ -11,8 +11,13 @@ import java.util.Set;
  */
 public interface RecipeService {
     Recipe findById(Long id);
+
     Set<Recipe> findAll();
+
     void saveAll(Collection<Recipe> recipes);
 
+    RecipeCommand findCommandById(Long id);
+
     RecipeCommand saveRecipeCommand(RecipeCommand recipeCommand);
+
 }

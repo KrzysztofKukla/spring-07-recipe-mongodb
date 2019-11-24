@@ -29,6 +29,10 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Recipe findById(final Long id) {
+        return getRecipe(id);
+    }
+
+    private Recipe getRecipe(Long id) {
         return recipeRepository.findById(id).orElseThrow(() -> new RuntimeException("Recipe does not exist"));
     }
 
@@ -50,6 +54,14 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe savedRecipe = recipeRepository.save(detachedRecipe);
         log.debug("Saved recipeId " + savedRecipe.getId());
         return recipeToRecipeCommand.convert(savedRecipe);
+    }
+
+    //Transactional is required because we are doing conversion outside the scope
+    //so if we do lazy loaded properties we'll receive LazyInitializationException
+    @Transactional
+    @Override
+    public RecipeCommand findCommandById(Long id) {
+        return recipeToRecipeCommand.convert(getRecipe(id));
     }
 
 }
