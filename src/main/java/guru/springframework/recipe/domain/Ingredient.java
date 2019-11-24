@@ -1,5 +1,7 @@
 package guru.springframework.recipe.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -21,6 +23,8 @@ import java.math.BigDecimal;
 //because we have circular reference in Category and Recipe entities we have to avoid in one of them in equalsAndHashCode method
 @EqualsAndHashCode(exclude = {"recipe"})
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Ingredient {
 
     public Ingredient(String description, BigDecimal amount, UnitOfMeasure unitOfMeasure) {
