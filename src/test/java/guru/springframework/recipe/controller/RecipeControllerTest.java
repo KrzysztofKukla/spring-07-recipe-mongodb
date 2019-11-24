@@ -1,5 +1,6 @@
 package guru.springframework.recipe.controller;
 
+import guru.springframework.recipe.commands.RecipeCommand;
 import guru.springframework.recipe.domain.Recipe;
 import guru.springframework.recipe.service.RecipeService;
 import org.hamcrest.Matchers;
@@ -47,6 +48,26 @@ class RecipeControllerTest {
             .andExpect(MockMvcResultMatchers.view().name("recipe/show"))
             .andExpect(MockMvcResultMatchers.model().attribute("recipe", Matchers.any(Recipe.class)));
         BDDMockito.then(recipeService).should().findById(ArgumentMatchers.anyLong());
+    }
+
+    @Test
+    void showById() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/new"))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.model().attribute("recipe", Matchers.any(RecipeCommand.class)))
+            .andExpect(MockMvcResultMatchers.view().name("/recipe/recipeForm"));
+    }
+
+    @Test
+    void saveOrUpdate() throws Exception {
+        RecipeCommand recipeCommand = RecipeCommand.builder().id(1L).build();
+
+        BDDMockito.when(recipeService.saveRecipeCommand(ArgumentMatchers.any(RecipeCommand.class))).thenReturn(recipeCommand);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/recipe"))
+            .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+            .andExpect(MockMvcResultMatchers.view().name("redirect:/recipe/show/" + recipeCommand.getId()));
+        BDDMockito.then(recipeService).should().saveRecipeCommand(ArgumentMatchers.any(RecipeCommand.class));
     }
 
 }
