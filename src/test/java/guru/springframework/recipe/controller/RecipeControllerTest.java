@@ -64,13 +64,13 @@ class RecipeControllerTest {
         long id = 1L;
         RecipeCommand recipeCommand = RecipeCommand.builder().id(id).description("description").build();
 
-        BDDMockito.when(recipeService.findCommandById(id)).thenReturn(recipeCommand);
+        BDDMockito.when(recipeService.getRecipeCommandById(id)).thenReturn(recipeCommand);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/update"))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.model().attribute("recipe", Matchers.any(RecipeCommand.class)))
             .andExpect(MockMvcResultMatchers.view().name("/recipe/recipeForm"));
-        BDDMockito.then(recipeService).should().findCommandById(ArgumentMatchers.anyLong());
+        BDDMockito.then(recipeService).should().getRecipeCommandById(ArgumentMatchers.anyLong());
     }
 
     @Test
@@ -84,8 +84,17 @@ class RecipeControllerTest {
             .param("id", "")
             .param("description", "description"))
             .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-            .andExpect(MockMvcResultMatchers.view().name("redirect:/recipe/show/" + recipeCommand.getId()));
+            .andExpect(MockMvcResultMatchers.view().name("redirect:/recipe/" + recipeCommand.getId() + "/show"));
         BDDMockito.then(recipeService).should().saveRecipeCommand(ArgumentMatchers.any(RecipeCommand.class));
+    }
+
+    @Test
+    void deleteById() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/delete"))
+            .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+            .andExpect(MockMvcResultMatchers.view().name("redirect:/"));
+        BDDMockito.then(recipeService).should().deleteById(ArgumentMatchers.anyLong());
     }
 
 }

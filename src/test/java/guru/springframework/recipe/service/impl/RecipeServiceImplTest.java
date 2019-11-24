@@ -47,6 +47,11 @@ class RecipeServiceImplTest {
         BDDMockito.then(recipeRepository).should().findById(id);
     }
 
+    @Test
+    void getRecipeCommandByIdTest() {
+
+    }
+
 
     @Test
     void shouldFindAllRecipes() {
@@ -74,6 +79,14 @@ class RecipeServiceImplTest {
         //then
         org.assertj.core.api.Assertions.assertThat(recipeService.findAll()).hasSize(recipeList.size());
         BDDMockito.then(recipeRepository).should().findAll();
+    }
+
+    @Test
+    void deleteById() {
+        long id = 1L;
+        recipeService.deleteById(id);
+
+        BDDMockito.then(recipeRepository).should().deleteById(id);
     }
 
 }
