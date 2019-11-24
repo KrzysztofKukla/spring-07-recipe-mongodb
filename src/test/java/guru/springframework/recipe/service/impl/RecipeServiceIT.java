@@ -6,6 +6,7 @@ import guru.springframework.recipe.converter.RecipeToRecipeCommand;
 import guru.springframework.recipe.domain.Recipe;
 import guru.springframework.recipe.repository.RecipeRepository;
 import guru.springframework.recipe.service.RecipeService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,17 @@ class RecipeServiceIT {
         assertEquals(testRecipe.getId(), savedRecipeCommand.getId());
         assertEquals(testRecipe.getCategories().size(), savedRecipeCommand.getCategories().size());
         assertEquals(testRecipe.getIngredients().size(), savedRecipeCommand.getIngredients().size());
+    }
+
+    @Test
+    void findCommandByIdTest() {
+        Recipe recipe = Recipe.builder().id(1L).description("description").build();
+
+        RecipeCommand recipeCommand = recipeToRecipeCommand.convert(recipe);
+
+        Assertions.assertEquals(recipe.getId(), recipeCommand.getId());
+        Assertions.assertEquals(recipe.getDescription(), recipeCommand.getDescription());
+
     }
 
 }
