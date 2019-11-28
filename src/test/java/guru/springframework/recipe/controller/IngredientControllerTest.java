@@ -117,4 +117,27 @@ class IngredientControllerTest {
             .andExpect(view().name("redirect:/recipe/" + ingredientCommand.getRecipeId() + "/ingredient/" + ingredientCommand.getId() + "/show"));
         BDDMockito.then(ingredientService).should().saveIngredientCommand(ArgumentMatchers.any(IngredientCommand.class));
     }
+
+    @Test
+    void newIngredientTest() throws Exception {
+        RecipeCommand recipeCommand = RecipeCommand.builder().id(1L).description("description").build();
+        Set<UnitOfMeasureCommand> unitOfMeasureSet = new HashSet<>(
+            Arrays.asList(
+                UnitOfMeasureCommand.builder().id(1L).build(),
+                UnitOfMeasureCommand.builder().id(2L).build()
+            )
+        );
+
+        BDDMockito.when(recipeService.findRecipeCommandById(ArgumentMatchers.anyLong())).thenReturn(recipeCommand);
+        BDDMockito.when(unitOfMeasureService.findAllUom()).thenReturn(unitOfMeasureSet);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/ingredient/new"))
+            .andExpect(status().isOk())
+            .andExpect(model().attribute("ingredient", Matchers.any(IngredientCommand.class)))
+            .andExpect(model().attribute("uomList", Matchers.any(Set.class)))
+            .andExpect(view().name("recipe/ingredient/ingredientform"));
+
+        BDDMockito.then(recipeService).should().findRecipeCommandById(anyLong());
+        BDDMockito.then(unitOfMeasureService).should().findAllUom();
+    }
 }

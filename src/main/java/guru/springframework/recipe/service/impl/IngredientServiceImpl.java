@@ -52,8 +52,8 @@ public class IngredientServiceImpl implements IngredientService {
         } else {
             ingredient = ingredientCommandToIngredient.convert(command);
         }
-        ingredientRepository.save(ingredient);
-        return command;
+        Ingredient savedIngredient = ingredientRepository.save(ingredient);
+        return ingredientToIngredientCommand.convert(savedIngredient);
 
         // Original from springframework guru
 //        Optional<Recipe> recipeOptional = recipeRepository.findById(command.getRecipeId());

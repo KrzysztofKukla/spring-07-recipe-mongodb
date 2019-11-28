@@ -68,6 +68,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private Recipe getRecipe(Long id) {
+        log.debug("find recipe by id-> " + id);
         return recipeRepository.findById(id).orElseThrow(() -> new RuntimeException("Recipe does not exist"));
     }
 }
