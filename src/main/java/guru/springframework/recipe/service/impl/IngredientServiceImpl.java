@@ -32,10 +32,10 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public IngredientCommand findByRecipeIdAndIngredientId(Long recipeId, Long ingredientId) {
         log.debug("Filtering ingredient by recipeId and ingredientId");
-        Ingredient ingredient = ingredientRepository.findByRecipeIdAndId(recipeId, ingredientId)
-            .orElseThrow(() -> new RuntimeException("Ingredient does" + "not exist"));
+        Ingredient ingredient = getIngredient(recipeId, ingredientId);
         return ingredientToIngredientCommand.convert(ingredient);
     }
+
 
     @Override
     @Transactional
@@ -94,4 +94,15 @@ public class IngredientServiceImpl implements IngredientService {
 
     }
 
+    @Override
+    public void deleteIngredientById(Long recipeId, Long ingredientId) {
+        Ingredient ingredient = getIngredient(recipeId, ingredientId);
+        ingredientRepository.delete(ingredient);
+        log.debug("Ingredient for {} recipeId has been deleted", recipeId);
+    }
+
+    private Ingredient getIngredient(Long recipeId, Long ingredientId) {
+        return ingredientRepository.findByRecipeIdAndId(recipeId, ingredientId)
+            .orElseThrow(() -> new RuntimeException("Ingredient does" + "not exist"));
+    }
 }

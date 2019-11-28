@@ -20,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 
 /**
@@ -97,6 +98,19 @@ class IngredientServiceImplTest {
         BDDMockito.then(ingredientCommandToIngredient).should(BDDMockito.times(1))
             .convert(ArgumentMatchers.any(IngredientCommand.class));
         BDDMockito.then(ingredientRepository).should().save(ArgumentMatchers.any(Ingredient.class));
+    }
+
+    @Test
+    void deleteIngredientTest() {
+        Long recipeId = 1L;
+        Long ingredientId = 1L;
+        Ingredient ingredient = Ingredient.builder().id(1L).build();
+
+        BDDMockito.when(ingredientRepository.findByRecipeIdAndId(anyLong(), anyLong())).thenReturn(Optional.of(ingredient));
+        ingredientService.deleteIngredientById(recipeId, ingredientId);
+
+        BDDMockito.then(ingredientRepository).should().findByRecipeIdAndId(anyLong(), anyLong());
+        BDDMockito.then(ingredientRepository).should().delete(any(Ingredient.class));
     }
 
 }

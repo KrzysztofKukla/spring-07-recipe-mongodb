@@ -1,7 +1,6 @@
 package guru.springframework.recipe.controller;
 
 import guru.springframework.recipe.commands.IngredientCommand;
-import guru.springframework.recipe.commands.RecipeCommand;
 import guru.springframework.recipe.commands.UnitOfMeasureCommand;
 import guru.springframework.recipe.service.IngredientService;
 import guru.springframework.recipe.service.RecipeService;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * @author Krzysztof Kukla
@@ -53,7 +53,6 @@ public class IngredientController {
     @PostMapping("/recipe/{recipeId}/ingredient")
     public String saveOrUpdate(@ModelAttribute IngredientCommand command) {
         IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command);
-
         log.debug("Saved recipeId-> " + savedCommand.getRecipeId());
         log.debug("Saved ingredientId-> " + savedCommand.getId());
         return "redirect:/recipe/" + savedCommand.getRecipeId() + "/ingredient/" + savedCommand.getId() + "/show";
@@ -61,14 +60,18 @@ public class IngredientController {
 
     @GetMapping("/recipe/{recipeId}/ingredient/new")
     public String newIngredient(@PathVariable Long recipeId, Model model) {
-        RecipeCommand recipeCommand = recipeService.findRecipeCommandById(recipeId);
-        IngredientCommand ingredientCommand = IngredientCommand.builder()
-            .recipeId(recipeId)
-            .unitOfMeasure(UnitOfMeasureCommand.builder().build())
-            .build();
-        model.addAttribute("ingredient", ingredientCommand);
+        IngredientCommand newIngredientCommand = IngredientCommand.builder().recipeId(recipeId).unitOfMeasure(new UnitOfMeasureCommand()).build();
+        model.addAttribute("ingredient", newIngredientCommand);
         model.addAttribute("uomList", unitOfMeasureService.findAllUom());
 
         return "recipe/ingredient/ingredientform";
+    }
+
+    @RequestMapping("/recipe/{recipeId}/ingredient/{ingredientId}/delete")
+    public String deleteIngredient(@PathVariable Long recipeId,
+                                   @PathVariable Long ingredientId) {
+        log.debug("Deleting ingredient id -> {} ", ingredientId);
+        ingredientService.deleteIngredientById(recipeId, ingredientId);
+        return "redirect:/recipe/" + recipeId + "/ingredients";
     }
 }

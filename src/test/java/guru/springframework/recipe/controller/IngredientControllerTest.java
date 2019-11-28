@@ -128,7 +128,6 @@ class IngredientControllerTest {
             )
         );
 
-        BDDMockito.when(recipeService.findRecipeCommandById(ArgumentMatchers.anyLong())).thenReturn(recipeCommand);
         BDDMockito.when(unitOfMeasureService.findAllUom()).thenReturn(unitOfMeasureSet);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/ingredient/new"))
@@ -137,7 +136,18 @@ class IngredientControllerTest {
             .andExpect(model().attribute("uomList", Matchers.any(Set.class)))
             .andExpect(view().name("recipe/ingredient/ingredientform"));
 
-        BDDMockito.then(recipeService).should().findRecipeCommandById(anyLong());
         BDDMockito.then(unitOfMeasureService).should().findAllUom();
     }
+
+    @Test
+    void deleteIngredientTest() throws Exception {
+        Long recipeId = 1L;
+        Long ingredientId = 1L;
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/ingredient/1/delete"))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(view().name("redirect:/recipe/" + recipeId + "/ingredients"));
+        BDDMockito.then(ingredientService).should().deleteIngredientById(anyLong(), anyLong());
+    }
+
 }
