@@ -64,13 +64,13 @@ class RecipeControllerTest {
         long id = 1L;
         RecipeCommand recipeCommand = RecipeCommand.builder().id(id).description("description").build();
 
-        BDDMockito.when(recipeService.getRecipeCommandById(id)).thenReturn(recipeCommand);
+        BDDMockito.when(recipeService.findRecipeCommandById(id)).thenReturn(recipeCommand);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/update"))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.model().attribute("recipe", Matchers.any(RecipeCommand.class)))
             .andExpect(MockMvcResultMatchers.view().name("/recipe/recipeForm"));
-        BDDMockito.then(recipeService).should().getRecipeCommandById(ArgumentMatchers.anyLong());
+        BDDMockito.then(recipeService).should().findRecipeCommandById(ArgumentMatchers.anyLong());
     }
 
     @Test
