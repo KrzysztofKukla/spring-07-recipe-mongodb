@@ -12,6 +12,7 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -19,8 +20,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.multipart.MultipartFile;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -55,7 +58,7 @@ class ImageControllerTest {
         //when
         BDDMockito.when(recipeService.findRecipeCommandById(ArgumentMatchers.anyLong())).thenReturn(recipeCommand);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/image"))
+        mockMvc.perform(get("/recipe/1/image"))
             .andExpect(status().isOk())
             .andExpect(model().attribute("recipe", Matchers.any(RecipeCommand.class)))
             .andExpect(view().name("recipe/imageuploadform"));
@@ -77,6 +80,36 @@ class ImageControllerTest {
 
         BDDMockito.then(imageService).should().saveImageFile(anyLong(), any(MultipartFile.class));
 
+    }
+
+    @Test
+    void renderImageFromDbTest() throws Exception {
+
+        //given
+        RecipeCommand command = new RecipeCommand();
+        command.setId(1L);
+
+        String s = "fake image text";
+        Byte[] bytesBoxed = new Byte[s.getBytes().length];
+
+        int i = 0;
+
+        for (byte primByte : s.getBytes()) {
+            bytesBoxed[i++] = primByte;
+        }
+
+        command.setImage(bytesBoxed);
+
+        BDDMockito.when(recipeService.findRecipeCommandById(anyLong())).thenReturn(command);
+
+        //when
+        MockHttpServletResponse response = mockMvc.perform(get("/recipe/1/recipeimage"))
+            .andExpect(status().isOk())
+            .andReturn().getResponse();
+
+        byte[] reponseBytes = response.getContentAsByteArray();
+
+        assertEquals(s.getBytes().length, reponseBytes.length);
     }
 
 }

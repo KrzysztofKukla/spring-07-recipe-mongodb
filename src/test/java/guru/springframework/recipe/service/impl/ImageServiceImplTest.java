@@ -1,7 +1,7 @@
 package guru.springframework.recipe.service.impl;
 
 import guru.springframework.recipe.domain.Recipe;
-import guru.springframework.recipe.service.RecipeService;
+import guru.springframework.recipe.repository.RecipeRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +14,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 
@@ -24,7 +25,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 class ImageServiceImplTest {
 
     @Mock
-    private RecipeService recipeService;
+    private RecipeRepository recipeRepository;
 
     @InjectMocks
     private ImageServiceImpl imageService;
@@ -36,12 +37,12 @@ class ImageServiceImplTest {
         MultipartFile mockMultipartFile = new MockMultipartFile("imagefile", "testing.txt", "text/plain",
             "Spring Framework Guru".getBytes());
 
-        BDDMockito.when(recipeService.findById(anyLong())).thenReturn(recipe);
+        BDDMockito.when(recipeRepository.findById(anyLong())).thenReturn(Optional.of(recipe));
         ArgumentCaptor<Recipe> recipeArgumentCaptor = ArgumentCaptor.forClass(Recipe.class);
         imageService.saveImageFile(1L, mockMultipartFile);
 
-        BDDMockito.then(recipeService).should().findById(anyLong());
-        BDDMockito.then(recipeService).should().saveRecipe(recipeArgumentCaptor.capture());
+        BDDMockito.then(recipeRepository).should().findById(anyLong());
+        BDDMockito.then(recipeRepository).should().save(recipeArgumentCaptor.capture());
         Recipe savedArgumentCapture = recipeArgumentCaptor.getValue();
         Assertions.assertEquals(mockMultipartFile.getBytes().length, savedArgumentCapture.getImage().length);
     }

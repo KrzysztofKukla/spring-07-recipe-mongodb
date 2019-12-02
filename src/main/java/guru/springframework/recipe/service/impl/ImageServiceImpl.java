@@ -1,8 +1,8 @@
 package guru.springframework.recipe.service.impl;
 
 import guru.springframework.recipe.domain.Recipe;
+import guru.springframework.recipe.repository.RecipeRepository;
 import guru.springframework.recipe.service.ImageService;
-import guru.springframework.recipe.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,12 +19,12 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
 
-    private final RecipeService recipeService;
+    private final RecipeRepository recipeRepository;
 
     @Override
     @Transactional
     public void saveImageFile(Long id, MultipartFile file) {
-        Recipe recipe = recipeService.findById(id);
+        Recipe recipe = recipeRepository.findById(id).orElseThrow(NoSuchFieldError::new);
         try {
             Byte[] byteObjects = new Byte[file.getBytes().length];
 
@@ -35,7 +35,7 @@ public class ImageServiceImpl implements ImageService {
             }
 
             recipe.setImage(byteObjects);
-            recipeService.saveRecipe(recipe);
+            recipeRepository.save(recipe);
 
         } catch (IOException e) {
 
