@@ -8,7 +8,6 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -19,7 +18,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -49,7 +50,7 @@ class RecipeControllerTest {
 
         BDDMockito.when(recipeService.findById(id)).thenReturn(recipe);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/show"))
+        mockMvc.perform(get("/recipe/1/show"))
             .andExpect(status().isOk())
             .andExpect(MockMvcResultMatchers.view().name("recipe/show"))
             .andExpect(MockMvcResultMatchers.model().attribute("recipe", Matchers.any(Recipe.class)));
@@ -60,13 +61,13 @@ class RecipeControllerTest {
     void findByIdNotExist() throws Exception {
         BDDMockito.when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/show"))
+        mockMvc.perform(get("/recipe/1/show"))
             .andExpect(status().isNotFound());
     }
 
     @Test
     void showById() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/new"))
+        mockMvc.perform(get("/recipe/new"))
             .andExpect(status().isOk())
             .andExpect(MockMvcResultMatchers.model().attribute("recipe", Matchers.any(RecipeCommand.class)))
             .andExpect(MockMvcResultMatchers.view().name("/recipe/recipeForm"));
@@ -79,7 +80,7 @@ class RecipeControllerTest {
 
         BDDMockito.when(recipeService.findRecipeCommandById(id)).thenReturn(recipeCommand);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/update"))
+        mockMvc.perform(get("/recipe/1/update"))
             .andExpect(status().isOk())
             .andExpect(MockMvcResultMatchers.model().attribute("recipe", Matchers.any(RecipeCommand.class)))
             .andExpect(MockMvcResultMatchers.view().name("/recipe/recipeForm"));
@@ -90,7 +91,7 @@ class RecipeControllerTest {
     void testPostNewRecipeForm() throws Exception {
         RecipeCommand recipeCommand = RecipeCommand.builder().id(1L).build();
 
-        BDDMockito.when(recipeService.saveRecipeCommand(ArgumentMatchers.any(RecipeCommand.class))).thenReturn(recipeCommand);
+        BDDMockito.when(recipeService.saveRecipeCommand(any(RecipeCommand.class))).thenReturn(recipeCommand);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/recipe")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -98,13 +99,13 @@ class RecipeControllerTest {
             .param("description", "description"))
             .andExpect(status().is3xxRedirection())
             .andExpect(MockMvcResultMatchers.view().name("redirect:/recipe/" + recipeCommand.getId() + "/show"));
-        BDDMockito.then(recipeService).should().saveRecipeCommand(ArgumentMatchers.any(RecipeCommand.class));
+        BDDMockito.then(recipeService).should().saveRecipeCommand(any(RecipeCommand.class));
     }
 
     @Test
     void deleteById() throws Exception {
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/delete"))
+        mockMvc.perform(get("/recipe/1/delete"))
             .andExpect(status().is3xxRedirection())
             .andExpect(MockMvcResultMatchers.view().name("redirect:/"));
         BDDMockito.then(recipeService).should().deleteById(anyLong());
@@ -114,10 +115,18 @@ class RecipeControllerTest {
     void handleExceptionTest() throws Exception {
         BDDMockito.when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/show"))
+        mockMvc.perform(get("/recipe/1/show"))
             .andExpect(status().isNotFound())
             .andExpect(view().name("404error"));
         BDDMockito.then(recipeService).should(BDDMockito.times(1)).findById(anyLong());
+    }
+
+    @Test
+    void numberFormatExceptionHandlerTest() throws Exception {
+        mockMvc.perform(get("/recipe/ssss/show"))
+            .andExpect(status().isBadRequest())
+            .andExpect(view().name("400error"));
+        BDDMockito.then(recipeService).shouldHaveNoInteractions();
     }
 
 }
