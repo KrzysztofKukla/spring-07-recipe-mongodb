@@ -1,6 +1,7 @@
 package guru.springframework.recipe.controller;
 
 import guru.springframework.recipe.commands.RecipeCommand;
+import guru.springframework.recipe.controller.exceptionhandler.ControllerExceptionHandler;
 import guru.springframework.recipe.service.ImageService;
 import guru.springframework.recipe.service.RecipeService;
 import org.hamcrest.Matchers;
@@ -47,7 +48,9 @@ class ImageControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(imageController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(imageController)
+            .setControllerAdvice(ControllerExceptionHandler.class)
+            .build();
     }
 
     @Test
@@ -110,6 +113,13 @@ class ImageControllerTest {
         byte[] reponseBytes = response.getContentAsByteArray();
 
         assertEquals(s.getBytes().length, reponseBytes.length);
+    }
+
+    @Test
+    void invalidUrlWithNumberFormatException() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/dddd/image"))
+            .andExpect(status().isBadRequest())
+            .andExpect(view().name("400error"));
     }
 
 }
