@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 /**
  * @author Krzysztof Kukla
@@ -107,6 +108,16 @@ class RecipeControllerTest {
             .andExpect(status().is3xxRedirection())
             .andExpect(MockMvcResultMatchers.view().name("redirect:/"));
         BDDMockito.then(recipeService).should().deleteById(anyLong());
+    }
+
+    @Test
+    void handleExceptionTest() throws Exception {
+        BDDMockito.when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/show"))
+            .andExpect(status().isNotFound())
+            .andExpect(view().name("404error"));
+        BDDMockito.then(recipeService).should(BDDMockito.times(1)).findById(anyLong());
     }
 
 }
