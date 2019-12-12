@@ -18,10 +18,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -99,7 +103,9 @@ class RecipeControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/recipe")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .param("id", "")
-            .param("description", "description"))
+            .param("description", "description")
+            .param("directions", "some directions")
+        )
             .andExpect(status().is3xxRedirection())
             .andExpect(MockMvcResultMatchers.view().name("redirect:/recipe/" + recipeCommand.getId() + "/show"));
         BDDMockito.then(recipeService).should().saveRecipeCommand(any(RecipeCommand.class));
@@ -130,6 +136,35 @@ class RecipeControllerTest {
             .andExpect(status().isBadRequest())
             .andExpect(view().name("400error"));
         BDDMockito.then(recipeService).shouldHaveNoInteractions();
+    }
+
+    @Test
+    void saveOrUpdateTestHasValidationErrors() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/recipe")
+            .param("directions", "some directions")
+        )
+            .andExpect(status().isOk())
+            .andExpect(model().attributeHasFieldErrors("recipeCommand", "description"))
+            .andExpect(view().name("/recipe/recipeForm"));
+        BDDMockito.then(recipeService).shouldHaveNoInteractions();
+    }
+
+    @Test
+    void saveOrUpdateTestNoValidationErrors() throws Exception {
+        RecipeCommand recipeCommand = RecipeCommand.builder().id(1L).build();
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("description", "abc");
+        params.add("directions", "some direction");
+
+        BDDMockito.when(recipeService.saveRecipeCommand(any(RecipeCommand.class))).thenReturn(recipeCommand);
+
+        mockMvc.perform(post("/recipe")
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .params(params)
+        )
+            .andExpect(status().is3xxRedirection())
+            .andExpect(view().name("redirect:/recipe/1/show"));
+        BDDMockito.then(recipeService).should().saveRecipeCommand(any(RecipeCommand.class));
     }
 
 }
