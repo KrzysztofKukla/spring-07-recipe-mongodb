@@ -28,7 +28,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @Slf4j
 public class RecipeController {
-    public static final String RECIPE_RECIPE_FORM_URL = "/recipe/recipeForm";
+    public static final String RECIPE_RECIPE_FORM_URL = "recipe/recipeForm";
     private final RecipeService recipeService;
 
     @GetMapping("/new")
@@ -52,14 +52,14 @@ public class RecipeController {
 
     @PostMapping
     //@ModelAttribute allows to bind form post parameters to RecipeCommand object
-    public String saveOrUpdate(@Valid @ModelAttribute RecipeCommand command, BindingResult bindingResult) {
+    public String saveOrUpdate(@Valid @ModelAttribute("recipe") RecipeCommand recipe, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             bindingResult.getAllErrors().forEach(objectError -> {
                 log.debug(objectError.toString());
             });
             return RECIPE_RECIPE_FORM_URL;
         }
-        RecipeCommand savedRecipeCommand = recipeService.saveRecipeCommand(command);
+        RecipeCommand savedRecipeCommand = recipeService.saveRecipeCommand(recipe);
         return "redirect:/recipe/" + savedRecipeCommand.getId() + "/show";
     }
 
