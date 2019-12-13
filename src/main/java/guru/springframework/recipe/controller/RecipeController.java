@@ -24,7 +24,7 @@ import javax.validation.Valid;
  * @author Krzysztof Kukla
  */
 @Controller
-@RequestMapping(value = "/recipe")
+@RequestMapping(value = "recipe")
 @RequiredArgsConstructor
 @Slf4j
 public class RecipeController {

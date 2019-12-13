@@ -77,7 +77,7 @@ class RecipeControllerTest {
         mockMvc.perform(get("/recipe/new"))
             .andExpect(status().isOk())
             .andExpect(MockMvcResultMatchers.model().attribute("recipe", Matchers.any(RecipeCommand.class)))
-            .andExpect(MockMvcResultMatchers.view().name("/recipe/recipeForm"));
+            .andExpect(MockMvcResultMatchers.view().name("recipe/recipeForm"));
     }
 
     @Test
@@ -90,25 +90,8 @@ class RecipeControllerTest {
         mockMvc.perform(get("/recipe/1/update"))
             .andExpect(status().isOk())
             .andExpect(MockMvcResultMatchers.model().attribute("recipe", Matchers.any(RecipeCommand.class)))
-            .andExpect(MockMvcResultMatchers.view().name("/recipe/recipeForm"));
+            .andExpect(MockMvcResultMatchers.view().name("recipe/recipeForm"));
         BDDMockito.then(recipeService).should().findRecipeCommandById(anyLong());
-    }
-
-    @Test
-    void testPostNewRecipeForm() throws Exception {
-        RecipeCommand recipeCommand = RecipeCommand.builder().id(1L).build();
-
-        BDDMockito.when(recipeService.saveRecipeCommand(any(RecipeCommand.class))).thenReturn(recipeCommand);
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/recipe")
-            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .param("id", "")
-            .param("description", "description")
-            .param("directions", "some directions")
-        )
-            .andExpect(status().is3xxRedirection())
-            .andExpect(MockMvcResultMatchers.view().name("redirect:/recipe/" + recipeCommand.getId() + "/show"));
-        BDDMockito.then(recipeService).should().saveRecipeCommand(any(RecipeCommand.class));
     }
 
     @Test
@@ -142,10 +125,12 @@ class RecipeControllerTest {
     void saveOrUpdateTestHasValidationErrors() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/recipe")
             .param("directions", "some directions")
+            .param("cookTime", "3000")
         )
             .andExpect(status().isOk())
-            .andExpect(model().attributeHasFieldErrors("recipeCommand", "description"))
-            .andExpect(view().name("/recipe/recipeForm"));
+            .andExpect(model().attributeHasFieldErrors("recipe", "description"))
+            .andExpect(model().attributeHasFieldErrors("recipe", "cookTime"))
+            .andExpect(view().name("recipe/recipeForm"));
         BDDMockito.then(recipeService).shouldHaveNoInteractions();
     }
 
