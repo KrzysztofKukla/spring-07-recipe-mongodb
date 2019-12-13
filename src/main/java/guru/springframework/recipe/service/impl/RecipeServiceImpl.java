@@ -4,6 +4,7 @@ import guru.springframework.recipe.commands.RecipeCommand;
 import guru.springframework.recipe.converter.RecipeCommandToRecipe;
 import guru.springframework.recipe.converter.RecipeToRecipeCommand;
 import guru.springframework.recipe.domain.Recipe;
+import guru.springframework.recipe.exception.NotFoundException;
 import guru.springframework.recipe.repository.RecipeRepository;
 import guru.springframework.recipe.service.RecipeService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,13 @@ public class RecipeServiceImpl implements RecipeService {
         return getRecipe(id);
     }
 
+    //Transactional is required because we are doing conversion outside the scope
+    //so if we do lazy loaded properties we'll receive LazyInitializationException
+    @Transactional
+    @Override
+    public RecipeCommand findRecipeCommandById(Long id) {
+        return recipeToRecipeCommand.convert(getRecipe(id));
+    }
 
     @Override
     public Set<Recipe> findAll() {
@@ -59,14 +67,6 @@ public class RecipeServiceImpl implements RecipeService {
         log.debug("Recipe has been deleted");
     }
 
-    //Transactional is required because we are doing conversion outside the scope
-    //so if we do lazy loaded properties we'll receive LazyInitializationException
-    @Transactional
-    @Override
-    public RecipeCommand findRecipeCommandById(Long id) {
-        return recipeToRecipeCommand.convert(getRecipe(id));
-    }
-
     @Override
     public Recipe saveRecipe(Recipe recipe) {
 
@@ -75,6 +75,6 @@ public class RecipeServiceImpl implements RecipeService {
 
     private Recipe getRecipe(Long id) {
         log.debug("find recipe by id-> " + id);
-        return recipeRepository.findById(id).orElseThrow(() -> new RuntimeException("Recipe does not exist"));
+        return recipeRepository.findById(id).orElseThrow(() -> new NotFoundException("Recipe does not exist for id value-> " + id.toString()));
     }
 }

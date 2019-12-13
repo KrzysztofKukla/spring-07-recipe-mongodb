@@ -1,6 +1,7 @@
 package guru.springframework.recipe.service.impl;
 
 import guru.springframework.recipe.domain.Recipe;
+import guru.springframework.recipe.exception.NotFoundException;
 import guru.springframework.recipe.repository.RecipeRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -43,13 +44,13 @@ class RecipeServiceImplTest {
         long id = 1L;
         BDDMockito.when(recipeRepository.findById(id)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(RuntimeException.class, () -> recipeService.findById(id));
+        Assertions.assertThrows(NotFoundException.class, () -> recipeService.findById(id));
         BDDMockito.then(recipeRepository).should().findById(id);
     }
 
     @Test
-    void getRecipeCommandByIdTest() {
-
+    void findRecipeCommandByIdTest() {
+        
     }
 
 
