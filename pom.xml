@@ -65,6 +65,13 @@
 			<version>3.3.7-1</version>
 		</dependency>
 
+		<!-- mySql driver -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<!-- version is inherit from parent pom, not needed here -->
+		</dependency>
+
 		<!-- Testing -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
