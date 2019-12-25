@@ -65,6 +65,13 @@
 			<version>3.3.7-1</version>
 		</dependency>
 
+		<!-- mySql driver -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<!-- version is inherit from parent pom, not needed here -->
+		</dependency>
+
 		<!-- Testing -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -118,6 +125,18 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<!-- it generates test coverage our unit tests -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<formats>
+						<format>html</format>
+						<format>xlm</format>
+					</formats>
+				</configuration>
 			</plugin>
 
 		</plugins>

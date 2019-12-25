@@ -12,7 +12,9 @@ import guru.springframework.recipe.repository.UnitOfMeasureRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * @author Krzysztof Kukla
@@ -27,16 +30,19 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 @Slf4j
+@Profile("default")
 public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
     private final CategoryRepository categoryRepository;
     private final RecipeRepository recipeRepository;
     private final UnitOfMeasureRepository unitOfMeasureRepository;
+    private final Environment environment;
 
     @Override
     //to avoid LazyInitializationException
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+        log.info("Default profile");
         recipeRepository.saveAll(getRecipes());
         log.debug("Loading Bootstrap Data");
     }
