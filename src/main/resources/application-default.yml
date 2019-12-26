@@ -2,8 +2,8 @@
 #in default profile properties from this file are loaded
 # in this case when there is no active profile, h2 will be apply
 
-spring:
-  datasource:
-    platform: h2
-  jpa:
-    show-sql: true
+#spring:
+#  datasource:
+#    platform: h2
+#  jpa:
+#    show-sql: true
