@@ -24,7 +24,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class RecipeCommand {
-    private Long id;
+    private String id;
 
     @NotBlank
     @Size(min = 3, max = 255) // Varchar in database allows to have max 255 characters

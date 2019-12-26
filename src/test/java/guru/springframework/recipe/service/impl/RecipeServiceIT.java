@@ -58,7 +58,7 @@ class RecipeServiceIT {
 
     @Test
     void findCommandByIdTest() {
-        Recipe recipe = Recipe.builder().id(1L).description("description").build();
+        Recipe recipe = Recipe.builder().id("1").description("description").build();
 
         RecipeCommand recipeCommand = recipeToRecipeCommand.convert(recipe);
 

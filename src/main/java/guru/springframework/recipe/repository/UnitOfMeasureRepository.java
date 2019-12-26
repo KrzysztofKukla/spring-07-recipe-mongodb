@@ -8,6 +8,6 @@ import java.util.Optional;
 /**
  * @author Krzysztof Kukla
  */
-public interface UnitOfMeasureRepository extends JpaRepository<UnitOfMeasure, Long> {
+public interface UnitOfMeasureRepository extends JpaRepository<UnitOfMeasure, String> {
     Optional<UnitOfMeasure> findByDescription(String description);
 }

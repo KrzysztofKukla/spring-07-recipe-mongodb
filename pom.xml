@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>guru.springframework</groupId>
 	<artifactId>05-recipe</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.18-SNAPSHOT</version>
 	<name>05-recipe</name>
 	<description>Demo project for Spring Boot</description>
 
@@ -65,11 +65,16 @@
 			<version>3.3.7-1</version>
 		</dependency>
 
-		<!-- mySql driver -->
+<!--		&lt;!&ndash; mySql driver &ndash;&gt;-->
+<!--		<dependency>-->
+<!--			<groupId>mysql</groupId>-->
+<!--			<artifactId>mysql-connector-java</artifactId>-->
+<!--			&lt;!&ndash; version is inherit from parent pom, not needed here &ndash;&gt;-->
+<!--		</dependency>-->
+		<!-- noSql Mongodb -->
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<!-- version is inherit from parent pom, not needed here -->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-mongodb</artifactId>
 		</dependency>
 
 		<!-- Testing -->

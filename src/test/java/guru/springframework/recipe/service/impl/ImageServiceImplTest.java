@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 
 /**
  * @author Krzysztof Kukla
@@ -33,15 +34,15 @@ class ImageServiceImplTest {
     @Test
     void saveImageFileTest() throws IOException {
         //given
-        Recipe recipe = Recipe.builder().id(1L).build();
+        Recipe recipe = Recipe.builder().id("1").build();
         MultipartFile mockMultipartFile = new MockMultipartFile("imagefile", "testing.txt", "text/plain",
             "Spring Framework Guru".getBytes());
 
-        BDDMockito.when(recipeRepository.findById(anyLong())).thenReturn(Optional.of(recipe));
+        BDDMockito.when(recipeRepository.findById(anyString())).thenReturn(Optional.of(recipe));
         ArgumentCaptor<Recipe> recipeArgumentCaptor = ArgumentCaptor.forClass(Recipe.class);
-        imageService.saveImageFile(1L, mockMultipartFile);
+        imageService.saveImageFile("1", mockMultipartFile);
 
-        BDDMockito.then(recipeRepository).should().findById(anyLong());
+        BDDMockito.then(recipeRepository).should().findById(anyString());
         BDDMockito.then(recipeRepository).should().save(recipeArgumentCaptor.capture());
         Recipe savedArgumentCapture = recipeArgumentCaptor.getValue();
         Assertions.assertEquals(mockMultipartFile.getBytes().length, savedArgumentCapture.getImage().length);

@@ -24,7 +24,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -56,58 +58,58 @@ class IngredientControllerTest {
 
     @Test
     void ingredientList() throws Exception {
-        RecipeCommand recipeCommand = RecipeCommand.builder().id(1L).description("description").build();
+        RecipeCommand recipeCommand = RecipeCommand.builder().id("1").description("description").build();
 
-        BDDMockito.when(recipeService.findRecipeCommandById(1L)).thenReturn(recipeCommand);
+        BDDMockito.when(recipeService.findRecipeCommandById("1")).thenReturn(recipeCommand);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/ingredients"))
             .andExpect(status().isOk())
             .andExpect(MockMvcResultMatchers.model().attribute("recipe", Matchers.any(RecipeCommand.class)))
             .andExpect(MockMvcResultMatchers.view().name("recipe/ingredient/list"));
-        BDDMockito.then(recipeService).should().findRecipeCommandById(anyLong());
+        BDDMockito.then(recipeService).should().findRecipeCommandById(anyString());
     }
 
     @Test
     void showIngredientTest() throws Exception {
         //given
-        IngredientCommand ingredientCommand = IngredientCommand.builder().id(1L).description("description").build();
+        IngredientCommand ingredientCommand = IngredientCommand.builder().id("1").description("description").build();
 
         //when
-        BDDMockito.when(ingredientService.findByRecipeIdAndIngredientId(1L, 1L)).thenReturn(ingredientCommand);
+        BDDMockito.when(ingredientService.findByRecipeIdAndIngredientId("1", "1")).thenReturn(ingredientCommand);
 
         //then
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/ingredient/1/show"))
             .andExpect(status().isOk())
             .andExpect(model().attribute("ingredient", Matchers.any(IngredientCommand.class)))
             .andExpect(view().name("recipe/ingredient/show"));
-        BDDMockito.then(ingredientService.findByRecipeIdAndIngredientId(anyLong(), anyLong()));
+        BDDMockito.then(ingredientService.findByRecipeIdAndIngredientId(anyString(), anyString()));
 
     }
 
     @Test
     void updateRecipeIngredientTest() throws Exception {
         //given
-        IngredientCommand ingredientCommand = IngredientCommand.builder().id(1L).description("description").build();
-        UnitOfMeasureCommand unitOfMeasureCommand1 = UnitOfMeasureCommand.builder().id(1L).description("desciption1").build();
-        UnitOfMeasureCommand unitOfMeasureCommand2 = UnitOfMeasureCommand.builder().id(2L).description("desciption2").build();
+        IngredientCommand ingredientCommand = IngredientCommand.builder().id("1").description("description").build();
+        UnitOfMeasureCommand unitOfMeasureCommand1 = UnitOfMeasureCommand.builder().id("1").description("desciption1").build();
+        UnitOfMeasureCommand unitOfMeasureCommand2 = UnitOfMeasureCommand.builder().id("2").description("desciption2").build();
         Set<UnitOfMeasureCommand> unitOfMeasuresCommandSet = new HashSet<>(Arrays.asList(unitOfMeasureCommand1, unitOfMeasureCommand2));
 
         //when
-        BDDMockito.when(ingredientService.findByRecipeIdAndIngredientId(anyLong(), anyLong())).thenReturn(ingredientCommand);
+        BDDMockito.when(ingredientService.findByRecipeIdAndIngredientId(anyString(), anyString())).thenReturn(ingredientCommand);
         BDDMockito.when(unitOfMeasureService.findAllUom()).thenReturn(unitOfMeasuresCommandSet);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/ingredient/1/update"))
             .andExpect(model().attribute("ingredient", Matchers.any(IngredientCommand.class)))
             .andExpect(model().attribute("uomList", Matchers.any(Set.class)))
             .andExpect(view().name("recipe/ingredient/ingredientform"));
-        BDDMockito.then(ingredientService).should().findByRecipeIdAndIngredientId(anyLong(), anyLong());
+        BDDMockito.then(ingredientService).should().findByRecipeIdAndIngredientId(anyString(), anyString());
         BDDMockito.then(unitOfMeasureService).should().findAllUom();
     }
 
     @Test
     void saveOrUpdateTest() throws Exception {
-        long commandId = 1L;
-        long recipeId = 1L;
+        String commandId = "1";
+        String recipeId = "1";
         IngredientCommand ingredientCommand = IngredientCommand.builder().id(commandId).recipeId(recipeId).description("desciption").build();
 
         BDDMockito.when(ingredientService.saveIngredientCommand(ArgumentMatchers.any(IngredientCommand.class))).thenReturn(ingredientCommand);
@@ -120,11 +122,11 @@ class IngredientControllerTest {
 
     @Test
     void newIngredientTest() throws Exception {
-        RecipeCommand recipeCommand = RecipeCommand.builder().id(1L).description("description").build();
+        RecipeCommand recipeCommand = RecipeCommand.builder().id("1").description("description").build();
         Set<UnitOfMeasureCommand> unitOfMeasureSet = new HashSet<>(
             Arrays.asList(
-                UnitOfMeasureCommand.builder().id(1L).build(),
-                UnitOfMeasureCommand.builder().id(2L).build()
+                UnitOfMeasureCommand.builder().id("1").build(),
+                UnitOfMeasureCommand.builder().id("2").build()
             )
         );
 
@@ -147,7 +149,7 @@ class IngredientControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/ingredient/1/delete"))
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name("redirect:/recipe/" + recipeId + "/ingredients"));
-        BDDMockito.then(ingredientService).should().deleteIngredientById(anyLong(), anyLong());
+        BDDMockito.then(ingredientService).should().deleteIngredientById(anyString(), anyString());
     }
 
 }

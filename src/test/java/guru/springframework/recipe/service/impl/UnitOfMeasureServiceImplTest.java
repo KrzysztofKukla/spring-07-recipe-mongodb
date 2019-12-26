@@ -35,7 +35,7 @@ class UnitOfMeasureServiceImplTest {
     @Test
     void findByDescription() {
         String description = "description";
-        UnitOfMeasure unitOfMeasure = UnitOfMeasure.builder().id(1L).description(description).build();
+        UnitOfMeasure unitOfMeasure = UnitOfMeasure.builder().id("1").description(description).build();
 
         BDDMockito.when(unitOfMeasureRepository.findByDescription(description)).thenReturn(Optional.of(unitOfMeasure));
 
@@ -45,12 +45,12 @@ class UnitOfMeasureServiceImplTest {
 
     @Test
     void findAll() {
-        UnitOfMeasure unitOfMeasure1 = UnitOfMeasure.builder().id(1L).description("desciption1").build();
-        UnitOfMeasure unitOfMeasure2 = UnitOfMeasure.builder().id(2L).description("desciption2").build();
+        UnitOfMeasure unitOfMeasure1 = UnitOfMeasure.builder().id("1").description("desciption1").build();
+        UnitOfMeasure unitOfMeasure2 = UnitOfMeasure.builder().id("2").description("desciption2").build();
         List<UnitOfMeasure> unitOfMeasuresList = Arrays.asList(unitOfMeasure1, unitOfMeasure2);
 
-        UnitOfMeasureCommand measureCommand1 = UnitOfMeasureCommand.builder().id(1L).description("description1").build();
-        UnitOfMeasureCommand measureCommand2 = UnitOfMeasureCommand.builder().id(2L).description("description2").build();
+        UnitOfMeasureCommand measureCommand1 = UnitOfMeasureCommand.builder().id("1").description("description1").build();
+        UnitOfMeasureCommand measureCommand2 = UnitOfMeasureCommand.builder().id("2").description("description2").build();
 
         BDDMockito.when(unitOfMeasureRepository.findAll()).thenReturn(unitOfMeasuresList);
         BDDMockito.when(unitOfMeasureToUnitOfMeasureCommand.convert(unitOfMeasure1)).thenReturn(measureCommand1);

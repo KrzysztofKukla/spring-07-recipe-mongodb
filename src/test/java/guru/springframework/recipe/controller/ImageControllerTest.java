@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -56,16 +57,16 @@ class ImageControllerTest {
     @Test
     void showUploadFormTest() throws Exception {
         //given
-        RecipeCommand recipeCommand = RecipeCommand.builder().id(1L).description("description").build();
+        RecipeCommand recipeCommand = RecipeCommand.builder().id("1").description("description").build();
 
         //when
-        BDDMockito.when(recipeService.findRecipeCommandById(ArgumentMatchers.anyLong())).thenReturn(recipeCommand);
+        BDDMockito.when(recipeService.findRecipeCommandById(ArgumentMatchers.anyString())).thenReturn(recipeCommand);
 
         mockMvc.perform(get("/recipe/1/image"))
             .andExpect(status().isOk())
             .andExpect(model().attribute("recipe", Matchers.any(RecipeCommand.class)))
             .andExpect(view().name("recipe/imageuploadform"));
-        BDDMockito.then(recipeService).should().findRecipeCommandById(anyLong());
+        BDDMockito.then(recipeService).should().findRecipeCommandById(anyString());
     }
 
     @Test
@@ -81,7 +82,7 @@ class ImageControllerTest {
             //it tells what should be consistent in header in url
             .andExpect(MockMvcResultMatchers.header().string("Location", "/recipe/1/show"));
 
-        BDDMockito.then(imageService).should().saveImageFile(anyLong(), any(MultipartFile.class));
+        BDDMockito.then(imageService).should().saveImageFile(anyString(), any(MultipartFile.class));
 
     }
 
@@ -90,7 +91,7 @@ class ImageControllerTest {
 
         //given
         RecipeCommand command = new RecipeCommand();
-        command.setId(1L);
+        command.setId("1");
 
         String s = "fake image text";
         Byte[] bytesBoxed = new Byte[s.getBytes().length];
@@ -103,7 +104,7 @@ class ImageControllerTest {
 
         command.setImage(bytesBoxed);
 
-        BDDMockito.when(recipeService.findRecipeCommandById(anyLong())).thenReturn(command);
+        BDDMockito.when(recipeService.findRecipeCommandById(anyString())).thenReturn(command);
 
         //when
         MockHttpServletResponse response = mockMvc.perform(get("/recipe/1/recipeimage"))

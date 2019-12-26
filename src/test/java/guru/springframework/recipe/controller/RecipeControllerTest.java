@@ -23,6 +23,7 @@ import org.springframework.util.MultiValueMap;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -52,7 +53,7 @@ class RecipeControllerTest {
 
     @Test
     void findById() throws Exception {
-        Long id = 1L;
+        String id = "1";
         Recipe recipe = Recipe.builder().id(id).build();
 
         BDDMockito.when(recipeService.findById(id)).thenReturn(recipe);
@@ -61,12 +62,12 @@ class RecipeControllerTest {
             .andExpect(status().isOk())
             .andExpect(MockMvcResultMatchers.view().name("recipe/show"))
             .andExpect(MockMvcResultMatchers.model().attribute("recipe", Matchers.any(Recipe.class)));
-        BDDMockito.then(recipeService).should().findById(anyLong());
+        BDDMockito.then(recipeService).should().findById(anyString());
     }
 
     @Test
     void findByIdNotExist() throws Exception {
-        BDDMockito.when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+        BDDMockito.when(recipeService.findById(anyString())).thenThrow(NotFoundException.class);
 
         mockMvc.perform(get("/recipe/1/show"))
             .andExpect(status().isNotFound());
@@ -82,7 +83,7 @@ class RecipeControllerTest {
 
     @Test
     void updateRecipeTest() throws Exception {
-        long id = 1L;
+        String id = "1";
         RecipeCommand recipeCommand = RecipeCommand.builder().id(id).description("description").build();
 
         BDDMockito.when(recipeService.findRecipeCommandById(id)).thenReturn(recipeCommand);
@@ -91,7 +92,7 @@ class RecipeControllerTest {
             .andExpect(status().isOk())
             .andExpect(MockMvcResultMatchers.model().attribute("recipe", Matchers.any(RecipeCommand.class)))
             .andExpect(MockMvcResultMatchers.view().name("recipe/recipeForm"));
-        BDDMockito.then(recipeService).should().findRecipeCommandById(anyLong());
+        BDDMockito.then(recipeService).should().findRecipeCommandById(anyString());
     }
 
     @Test
@@ -100,17 +101,17 @@ class RecipeControllerTest {
         mockMvc.perform(get("/recipe/1/delete"))
             .andExpect(status().is3xxRedirection())
             .andExpect(MockMvcResultMatchers.view().name("redirect:/"));
-        BDDMockito.then(recipeService).should().deleteById(anyLong());
+        BDDMockito.then(recipeService).should().deleteById(anyString());
     }
 
     @Test
     void handleExceptionTest() throws Exception {
-        BDDMockito.when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+        BDDMockito.when(recipeService.findById(anyString())).thenThrow(NotFoundException.class);
 
         mockMvc.perform(get("/recipe/1/show"))
             .andExpect(status().isNotFound())
             .andExpect(view().name("404error"));
-        BDDMockito.then(recipeService).should(BDDMockito.times(1)).findById(anyLong());
+        BDDMockito.then(recipeService).should(BDDMockito.times(1)).findById(anyString());
     }
 
     @Test
@@ -136,7 +137,7 @@ class RecipeControllerTest {
 
     @Test
     void saveOrUpdateTestNoValidationErrors() throws Exception {
-        RecipeCommand recipeCommand = RecipeCommand.builder().id(1L).build();
+        RecipeCommand recipeCommand = RecipeCommand.builder().id("1").build();
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("description", "abc");
         params.add("directions", "some direction");

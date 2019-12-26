@@ -30,7 +30,7 @@ public class IngredientServiceImpl implements IngredientService {
     private final IngredientCommandToIngredient ingredientCommandToIngredient;
 
     @Override
-    public IngredientCommand findByRecipeIdAndIngredientId(Long recipeId, Long ingredientId) {
+    public IngredientCommand findByRecipeIdAndIngredientId(String recipeId, String ingredientId) {
         log.debug("Filtering ingredient by recipeId and ingredientId");
         Ingredient ingredient = getIngredient(recipeId, ingredientId);
         return ingredientToIngredientCommand.convert(ingredient);
@@ -95,13 +95,13 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public void deleteIngredientById(Long recipeId, Long ingredientId) {
+    public void deleteIngredientById(String recipeId, String ingredientId) {
         Ingredient ingredient = getIngredient(recipeId, ingredientId);
         ingredientRepository.delete(ingredient);
         log.debug("Ingredient for {} recipeId has been deleted", recipeId);
     }
 
-    private Ingredient getIngredient(Long recipeId, Long ingredientId) {
+    private Ingredient getIngredient(String recipeId, String ingredientId) {
         return ingredientRepository.findByRecipeIdAndId(recipeId, ingredientId)
             .orElseThrow(() -> new RuntimeException("Ingredient does" + "not exist"));
     }

@@ -39,13 +39,13 @@ public class RecipeController {
     }
 
     @GetMapping(value = "/{id}/show")
-    public String findById(@PathVariable Long id, Model model) {
+    public String findById(@PathVariable String id, Model model) {
         model.addAttribute("recipe", recipeService.findById(id));
         return "recipe/show";
     }
 
     @GetMapping("/{id}/update")
-    public String updateRecipe(@PathVariable Long id, Model model) {
+    public String updateRecipe(@PathVariable String id, Model model) {
         model.addAttribute("recipe", recipeService.findRecipeCommandById(id));
         return RECIPE_RECIPE_FORM_URL;
     }
@@ -64,7 +64,7 @@ public class RecipeController {
     }
 
     @GetMapping("/{id}/delete")
-    public String deleteById(@PathVariable Long id) {
+    public String deleteById(@PathVariable String id) {
         log.debug("Deleting id-> " + id);
         recipeService.deleteById(id);
         return "redirect:/";

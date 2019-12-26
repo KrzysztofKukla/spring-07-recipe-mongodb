@@ -29,7 +29,7 @@ public class RecipeServiceImpl implements RecipeService {
     private final RecipeToRecipeCommand recipeToRecipeCommand;
 
     @Override
-    public Recipe findById(final Long id) {
+    public Recipe findById(final String id) {
         return getRecipe(id);
     }
 
@@ -37,7 +37,7 @@ public class RecipeServiceImpl implements RecipeService {
     //so if we do lazy loaded properties we'll receive LazyInitializationException
     @Transactional
     @Override
-    public RecipeCommand findRecipeCommandById(Long id) {
+    public RecipeCommand findRecipeCommandById(String id) {
         return recipeToRecipeCommand.convert(getRecipe(id));
     }
 
@@ -62,7 +62,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         recipeRepository.deleteById(id);
         log.debug("Recipe has been deleted");
     }
@@ -73,7 +73,7 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeRepository.save(recipe);
     }
 
-    private Recipe getRecipe(Long id) {
+    private Recipe getRecipe(String id) {
         log.debug("find recipe by id-> " + id);
         return recipeRepository.findById(id).orElseThrow(() -> new NotFoundException("Recipe does not exist for id value-> " + id.toString()));
     }

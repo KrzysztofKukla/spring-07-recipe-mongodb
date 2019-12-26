@@ -22,6 +22,7 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 
 /**
  * @author Krzysztof Kukla
@@ -46,8 +47,8 @@ class IngredientServiceImplTest {
 
     @Test
     void findByRecipeIdAndIngredientId() {
-        long ingredientId = 1L;
-        long recipeId = 1L;
+        String ingredientId = "1";
+        String recipeId = "1";
         Ingredient ingredient = Ingredient.builder().id(ingredientId).description("description").build();
         IngredientCommand ingredientCommand = IngredientCommand.builder().id(ingredientId).recipeId(recipeId).description("description").build();
 
@@ -56,25 +57,25 @@ class IngredientServiceImplTest {
         IngredientCommand foundIngredientCommand = ingredientService.findByRecipeIdAndIngredientId(recipeId, ingredientId);
 
         Assertions.assertEquals(ingredientCommand, foundIngredientCommand);
-        BDDMockito.then(ingredientRepository).should().findByRecipeIdAndId(anyLong(), anyLong());
+        BDDMockito.then(ingredientRepository).should().findByRecipeIdAndId(anyString(), anyString());
         BDDMockito.then(ingredientToIngredientCommand.convert(ArgumentMatchers.any(Ingredient.class)));
     }
 
     @Test
     void saveIngredientCommandIngredientPresentTest() {
-        long recipeId = 1L;
-        long ingredientId = 1L;
+        String recipeId = "1";
+        String ingredientId = "1";
         Recipe recipe = Recipe.builder().id(recipeId).build();
         Ingredient ingredient = Ingredient.builder().id(ingredientId).recipe(recipe).description("description").build();
-        UnitOfMeasure unitOfMeasure = UnitOfMeasure.builder().id(1L).build();
-        UnitOfMeasureCommand unitOfMeasureCommand = UnitOfMeasureCommand.builder().id(1L).build();
-        IngredientCommand ingredientCommand = IngredientCommand.builder().id(1L).recipeId(1L).unitOfMeasure(unitOfMeasureCommand).build();
+        UnitOfMeasure unitOfMeasure = UnitOfMeasure.builder().id("1").build();
+        UnitOfMeasureCommand unitOfMeasureCommand = UnitOfMeasureCommand.builder().id("1").build();
+        IngredientCommand ingredientCommand = IngredientCommand.builder().id("1").recipeId("1").unitOfMeasure(unitOfMeasureCommand).build();
 
-        BDDMockito.when(ingredientRepository.findByRecipeIdAndId(anyLong(), anyLong())).thenReturn(Optional.of(ingredient));
-        BDDMockito.when(unitOfMeasureRepository.findById(anyLong())).thenReturn(Optional.of(unitOfMeasure));
+        BDDMockito.when(ingredientRepository.findByRecipeIdAndId(anyString(), anyString())).thenReturn(Optional.of(ingredient));
+        BDDMockito.when(unitOfMeasureRepository.findById(anyString())).thenReturn(Optional.of(unitOfMeasure));
         ingredientService.saveIngredientCommand(ingredientCommand);
 
-        BDDMockito.then(ingredientRepository).should().findByRecipeIdAndId(anyLong(), anyLong());
+        BDDMockito.then(ingredientRepository).should().findByRecipeIdAndId(anyString(), anyString());
         BDDMockito.then(ingredientCommandToIngredient).should(BDDMockito.times(0))
             .convert(ArgumentMatchers.any(IngredientCommand.class));
         BDDMockito.then(ingredientRepository).should().save(ArgumentMatchers.any(Ingredient.class));
@@ -82,19 +83,19 @@ class IngredientServiceImplTest {
 
     @Test
     void saveIngredientCommandIngredientNotPresentTest() {
-        long recipeId = 1L;
-        long ingredientId = 1L;
+        String recipeId = "1";
+        String ingredientId = "1";
         Recipe recipe = Recipe.builder().id(recipeId).build();
         Ingredient ingredient = Ingredient.builder().id(ingredientId).recipe(recipe).description("description").build();
-        UnitOfMeasureCommand unitOfMeasureCommand = UnitOfMeasureCommand.builder().id(1L).build();
-        IngredientCommand ingredientCommand = IngredientCommand.builder().id(1L).recipeId(1L).unitOfMeasure(unitOfMeasureCommand).build();
+        UnitOfMeasureCommand unitOfMeasureCommand = UnitOfMeasureCommand.builder().id("1").build();
+        IngredientCommand ingredientCommand = IngredientCommand.builder().id("1").recipeId("1").unitOfMeasure(unitOfMeasureCommand).build();
 
-        BDDMockito.when(ingredientRepository.findByRecipeIdAndId(anyLong(), anyLong())).thenReturn(Optional.empty());
+        BDDMockito.when(ingredientRepository.findByRecipeIdAndId(anyString(), anyString())).thenReturn(Optional.empty());
         BDDMockito.when(ingredientCommandToIngredient.convert(ArgumentMatchers.any(IngredientCommand.class))).thenReturn(ingredient);
         ingredientService.saveIngredientCommand(ingredientCommand);
 
-        BDDMockito.then(ingredientRepository).should().findByRecipeIdAndId(anyLong(), anyLong());
-        BDDMockito.then(unitOfMeasureRepository).should(BDDMockito.times(0)).findById(anyLong());
+        BDDMockito.then(ingredientRepository).should().findByRecipeIdAndId(anyString(), anyString());
+        BDDMockito.then(unitOfMeasureRepository).should(BDDMockito.times(0)).findById(anyString());
         BDDMockito.then(ingredientCommandToIngredient).should(BDDMockito.times(1))
             .convert(ArgumentMatchers.any(IngredientCommand.class));
         BDDMockito.then(ingredientRepository).should().save(ArgumentMatchers.any(Ingredient.class));
@@ -102,14 +103,14 @@ class IngredientServiceImplTest {
 
     @Test
     void deleteIngredientTest() {
-        Long recipeId = 1L;
-        Long ingredientId = 1L;
-        Ingredient ingredient = Ingredient.builder().id(1L).build();
+        String recipeId = "1";
+        String ingredientId = "1";
+        Ingredient ingredient = Ingredient.builder().id("1").build();
 
-        BDDMockito.when(ingredientRepository.findByRecipeIdAndId(anyLong(), anyLong())).thenReturn(Optional.of(ingredient));
+        BDDMockito.when(ingredientRepository.findByRecipeIdAndId(anyString(), anyString())).thenReturn(Optional.of(ingredient));
         ingredientService.deleteIngredientById(recipeId, ingredientId);
 
-        BDDMockito.then(ingredientRepository).should().findByRecipeIdAndId(anyLong(), anyLong());
+        BDDMockito.then(ingredientRepository).should().findByRecipeIdAndId(anyString(), anyString());
         BDDMockito.then(ingredientRepository).should().delete(any(Ingredient.class));
     }
 

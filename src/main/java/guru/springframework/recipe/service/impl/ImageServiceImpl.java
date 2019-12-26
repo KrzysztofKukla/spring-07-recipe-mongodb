@@ -23,7 +23,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     @Transactional
-    public void saveImageFile(Long id, MultipartFile file) {
+    public void saveImageFile(String id, MultipartFile file) {
         Recipe recipe = recipeRepository.findById(id).orElseThrow(NoSuchFieldError::new);
         try {
             Byte[] byteObjects = new Byte[file.getBytes().length];

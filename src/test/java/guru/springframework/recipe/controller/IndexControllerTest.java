@@ -51,9 +51,9 @@ class IndexControllerTest {
 
     @Test
     void testIndexPage() {
-        Recipe first = Recipe.builder().id(1L).description("first Descriptuion").build();
-        Recipe second = Recipe.builder().id(2L).description("second Descriptuion").build();
-        Recipe third = Recipe.builder().id(3L).description("third Descriptuion").build();
+        Recipe first = Recipe.builder().id("1").description("first Descriptuion").build();
+        Recipe second = Recipe.builder().id("2").description("second Descriptuion").build();
+        Recipe third = Recipe.builder().id("3").description("third Descriptuion").build();
         Set<Recipe> recipes = new HashSet<>(Arrays.asList(first, second, third));
 
         String categoryDescription = "Italian";

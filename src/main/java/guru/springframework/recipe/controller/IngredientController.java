@@ -27,7 +27,7 @@ public class IngredientController {
     private final UnitOfMeasureService unitOfMeasureService;
 
     @GetMapping("/recipe/{recipeId}/ingredients")
-    public String ingredientList(@PathVariable Long recipeId, Model model) {
+    public String ingredientList(@PathVariable String recipeId, Model model) {
 
         // use command object to avoid lazy load errors in Thymeleaf.
         model.addAttribute("recipe", recipeService.findRecipeCommandById(recipeId));
@@ -35,14 +35,14 @@ public class IngredientController {
     }
 
     @GetMapping("/recipe/{recipeId}/ingredient/{ingredientId}/show")
-    public String showIngredient(@PathVariable Long recipeId, @PathVariable Long ingredientId, Model model) {
+    public String showIngredient(@PathVariable String recipeId, @PathVariable String ingredientId, Model model) {
         model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(recipeId, ingredientId));
         return "recipe/ingredient/show";
     }
 
     @GetMapping("/recipe/{recipeId}/ingredient/{ingredientId}/update")
-    public String updateRecipeIngredient(@PathVariable Long recipeId,
-                                         @PathVariable Long ingredientId,
+    public String updateRecipeIngredient(@PathVariable String recipeId,
+                                         @PathVariable String ingredientId,
                                          Model model) {
         model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(recipeId, ingredientId));
         model.addAttribute("uomList", unitOfMeasureService.findAllUom());
@@ -59,7 +59,7 @@ public class IngredientController {
     }
 
     @GetMapping("/recipe/{recipeId}/ingredient/new")
-    public String newIngredient(@PathVariable Long recipeId, Model model) {
+    public String newIngredient(@PathVariable String recipeId, Model model) {
         IngredientCommand newIngredientCommand = IngredientCommand.builder().recipeId(recipeId).unitOfMeasure(new UnitOfMeasureCommand()).build();
         model.addAttribute("ingredient", newIngredientCommand);
         model.addAttribute("uomList", unitOfMeasureService.findAllUom());
@@ -68,8 +68,8 @@ public class IngredientController {
     }
 
     @RequestMapping("/recipe/{recipeId}/ingredient/{ingredientId}/delete")
-    public String deleteIngredient(@PathVariable Long recipeId,
-                                   @PathVariable Long ingredientId) {
+    public String deleteIngredient(@PathVariable String recipeId,
+                                   @PathVariable String ingredientId) {
         log.debug("Deleting ingredient id -> {} ", ingredientId);
         ingredientService.deleteIngredientById(recipeId, ingredientId);
         return "redirect:/recipe/" + recipeId + "/ingredients";

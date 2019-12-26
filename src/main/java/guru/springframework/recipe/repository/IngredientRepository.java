@@ -8,7 +8,7 @@ import java.util.Optional;
 /**
  * @author Krzysztof Kukla
  */
-public interface IngredientRepository extends JpaRepository<Ingredient, Long> {
-    Optional<Ingredient> findByRecipeIdAndId(Long recipeId, Long id);
+public interface IngredientRepository extends JpaRepository<Ingredient, String> {
+    Optional<Ingredient> findByRecipeIdAndId(String recipeId, String id);
 
 }

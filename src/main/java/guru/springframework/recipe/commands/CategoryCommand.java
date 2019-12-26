@@ -19,7 +19,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 public class CategoryCommand {
-    private Long id;
+    private String id;
     private String description;
     private Set<Recipe> recipes = new HashSet<>();
 
