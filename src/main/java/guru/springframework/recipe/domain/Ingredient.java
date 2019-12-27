@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 /**
  * @author Krzysztof Kukla
@@ -17,10 +17,10 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
+//Ingredient is nested in the list of Mongo Document so it does not get Id value, even if we annotate id with @Id annotation
 public class Ingredient {
 
-    @Id
-    private String id;
+    private String id = UUID.randomUUID().toString();
     private String description;
     private BigDecimal amount;
 

@@ -1,7 +1,5 @@
 package guru.springframework.recipe.controller;
 
-import guru.springframework.recipe.domain.Category;
-import guru.springframework.recipe.domain.UnitOfMeasure;
 import guru.springframework.recipe.service.CategoryService;
 import guru.springframework.recipe.service.RecipeService;
 import guru.springframework.recipe.service.UnitOfMeasureService;
@@ -26,10 +24,6 @@ public class IndexController {
     @RequestMapping({"","/","/index"})
     public String index(Model model){
         model.addAttribute("recipes", recipeService.findAll());
-        Category category = categoryService.findByDescription("Italian");
-        UnitOfMeasure unitOfMeasure = unitOfMeasureService.findByDescription("Cup");
-        System.out.println(category);
-        System.out.println(unitOfMeasure);
         return "index";
     }
 }

@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * from experience I recommend to create pojos class for domain objects,
@@ -21,6 +21,6 @@ import java.util.Set;
 public class CategoryCommand {
     private String id;
     private String description;
-    private Set<Recipe> recipes = new HashSet<>();
+    private List<Recipe> recipes = new ArrayList<>();
 
 }
