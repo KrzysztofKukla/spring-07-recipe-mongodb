@@ -8,9 +8,9 @@ import guru.springframework.recipe.service.UnitOfMeasureService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author Krzysztof Kukla
@@ -29,8 +29,10 @@ public class UnitOfMeasureServiceImpl implements UnitOfMeasureService {
 
     @Override
     public Set<UnitOfMeasureCommand> findAllUom() {
-        return unitOfMeasureRepository.findAll().stream()
-            .map(unitOfMeasureToUnitOfMeasureCommand::convert)
-            .collect(Collectors.toSet());
+        Set<UnitOfMeasureCommand> all = new HashSet<>();
+        unitOfMeasureRepository.findAll().forEach(i -> {
+            all.add(unitOfMeasureToUnitOfMeasureCommand.convert(i));
+        });
+        return all;
     }
 }

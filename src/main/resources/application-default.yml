@@ -1,9 +1,0 @@
-#default profile is active when there is no profile available
-#in default profile properties from this file are loaded
-# in this case when there is no active profile, h2 will be apply
-
-#spring:
-#  datasource:
-#    platform: h2
-#  jpa:
-#    show-sql: true

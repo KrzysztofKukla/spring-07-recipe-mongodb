@@ -43,7 +43,9 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Set<Recipe> findAll() {
-        return new HashSet<>(recipeRepository.findAll());
+        Set<Recipe> all = new HashSet<>();
+        recipeRepository.findAll().forEach(all::add);
+        return all;
     }
 
     @Override
