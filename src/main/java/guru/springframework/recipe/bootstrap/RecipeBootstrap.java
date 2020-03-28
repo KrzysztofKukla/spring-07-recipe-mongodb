@@ -9,12 +9,11 @@ import guru.springframework.recipe.domain.UnitOfMeasure;
 import guru.springframework.recipe.repository.CategoryRepository;
 import guru.springframework.recipe.repository.RecipeRepository;
 import guru.springframework.recipe.repository.UnitOfMeasureRepository;
+import guru.springframework.recipe.repository.reactive.UnitOfMeasureReactiveRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +21,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * @author Krzysztof Kukla
@@ -36,6 +34,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
     private final CategoryRepository categoryRepository;
     private final RecipeRepository recipeRepository;
     private final UnitOfMeasureRepository unitOfMeasureRepository;
+    private final UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository;
 
     @Override
     @Transactional
@@ -44,6 +43,8 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         loadUom();
         recipeRepository.saveAll(getRecipes());
         log.debug("Loading Bootstrap Data");
+
+        log.debug("Count-> {}", unitOfMeasureReactiveRepository.count().block());
     }
 
     private void loadCategories(){
