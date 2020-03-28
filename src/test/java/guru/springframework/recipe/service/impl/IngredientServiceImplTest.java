@@ -55,7 +55,7 @@ class IngredientServiceImplTest {
 
         BDDMockito.when(ingredientRepository.findByRecipeIdAndId(recipeId, ingredientId)).thenReturn(Optional.of(ingredient));
         BDDMockito.when(ingredientToIngredientCommand.convert(ArgumentMatchers.any(Ingredient.class))).thenReturn(ingredientCommand);
-        IngredientCommand foundIngredientCommand = ingredientService.findByRecipeIdAndIngredientId(recipeId, ingredientId);
+        IngredientCommand foundIngredientCommand = ingredientService.findByRecipeIdAndIngredientId(recipeId, ingredientId).block();
 
         Assertions.assertEquals(ingredientCommand, foundIngredientCommand);
         BDDMockito.then(ingredientRepository).should().findByRecipeIdAndId(anyString(), anyString());

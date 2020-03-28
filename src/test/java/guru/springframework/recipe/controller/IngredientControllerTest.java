@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -76,7 +77,7 @@ class IngredientControllerTest {
         IngredientCommand ingredientCommand = IngredientCommand.builder().id("1").description("description").build();
 
         //when
-        BDDMockito.when(ingredientService.findByRecipeIdAndIngredientId("1", "1")).thenReturn(ingredientCommand);
+        BDDMockito.when(ingredientService.findByRecipeIdAndIngredientId("1", "1")).thenReturn(Mono.just(ingredientCommand));
 
         //then
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/ingredient/1/show"))
@@ -95,7 +96,7 @@ class IngredientControllerTest {
         UnitOfMeasureCommand unitOfMeasureCommand2 = UnitOfMeasureCommand.builder().id("2").description("desciption2").build();
 
         //when
-        BDDMockito.when(ingredientService.findByRecipeIdAndIngredientId(anyString(), anyString())).thenReturn(ingredientCommand);
+        BDDMockito.when(ingredientService.findByRecipeIdAndIngredientId(anyString(), anyString())).thenReturn(Mono.just(ingredientCommand));
         BDDMockito.when(unitOfMeasureService.findAllUom()).thenReturn(Flux.just(unitOfMeasureCommand1, unitOfMeasureCommand2));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/ingredient/1/update"))
@@ -112,7 +113,7 @@ class IngredientControllerTest {
         String recipeId = "1";
         IngredientCommand ingredientCommand = IngredientCommand.builder().id(commandId).recipeId(recipeId).description("desciption").build();
 
-        BDDMockito.when(ingredientService.saveIngredientCommand(ArgumentMatchers.any(IngredientCommand.class))).thenReturn(ingredientCommand);
+        BDDMockito.when(ingredientService.saveIngredientCommand(ArgumentMatchers.any(IngredientCommand.class))).thenReturn(Mono.just(ingredientCommand));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/recipe/1/ingredient"))
             .andExpect(status().is3xxRedirection())
