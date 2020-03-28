@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
+import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -64,7 +65,7 @@ class IndexControllerTest {
 
         BDDMockito.when(recipeService.findAll()).thenReturn(recipes);
         BDDMockito.when(categoryService.findByDescription(categoryDescription)).thenReturn(category);
-        BDDMockito.when(unitOfMeasureService.findByDescription(unitOfMeasureDescription)).thenReturn(unitOfMeasure);
+        BDDMockito.when(unitOfMeasureService.findByDescription(unitOfMeasureDescription)).thenReturn(Mono.just(unitOfMeasure));
 
         ArgumentCaptor<Set<Recipe>> argumentCaptor = ArgumentCaptor.forClass(Set.class);
 

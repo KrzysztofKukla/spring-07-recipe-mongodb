@@ -2,6 +2,8 @@ package guru.springframework.recipe.service;
 
 import guru.springframework.recipe.commands.UnitOfMeasureCommand;
 import guru.springframework.recipe.domain.UnitOfMeasure;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Set;
 
@@ -9,8 +11,8 @@ import java.util.Set;
  * @author Krzysztof Kukla
  */
 public interface UnitOfMeasureService {
-    UnitOfMeasure findByDescription(String description);
+    Mono<UnitOfMeasure> findByDescription(String description);
 
-    Set<UnitOfMeasureCommand> findAllUom();
+    Flux<UnitOfMeasureCommand> findAllUom();
 
 }

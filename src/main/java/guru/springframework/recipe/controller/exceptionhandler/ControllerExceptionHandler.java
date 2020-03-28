@@ -14,12 +14,12 @@ import org.springframework.web.servlet.ModelAndView;
 @Slf4j
 public class ControllerExceptionHandler {
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(NumberFormatException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(Exception.class)
     public ModelAndView handleNumberFormat(Exception exception) {
-        log.error("Handling NumberFormatException-> " + exception.getMessage());
+        log.error("Wrong Url address-> " + exception.getMessage());
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("400error");
+        modelAndView.setViewName("404error");
         modelAndView.addObject("exception", exception);
         return modelAndView;
 

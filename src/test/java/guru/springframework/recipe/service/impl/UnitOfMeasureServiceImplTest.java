@@ -4,6 +4,7 @@ import guru.springframework.recipe.commands.UnitOfMeasureCommand;
 import guru.springframework.recipe.converter.UnitOfMeasureToUnitOfMeasureCommand;
 import guru.springframework.recipe.domain.UnitOfMeasure;
 import guru.springframework.recipe.repository.UnitOfMeasureRepository;
+import guru.springframework.recipe.repository.reactive.UnitOfMeasureReactiveRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +13,8 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +27,7 @@ import java.util.Optional;
 class UnitOfMeasureServiceImplTest {
 
     @Mock
-    private UnitOfMeasureRepository unitOfMeasureRepository;
+    private UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository;
 
     @Mock
     private UnitOfMeasureToUnitOfMeasureCommand unitOfMeasureToUnitOfMeasureCommand;
@@ -36,28 +39,30 @@ class UnitOfMeasureServiceImplTest {
     void findByDescription() {
         String description = "description";
         UnitOfMeasure unitOfMeasure = UnitOfMeasure.builder().id("1").description(description).build();
+        Mono<UnitOfMeasure> unitOfMeasureMono = Mono.just(unitOfMeasure);
 
-        BDDMockito.when(unitOfMeasureRepository.findByDescription(description)).thenReturn(Optional.of(unitOfMeasure));
+        BDDMockito.when(unitOfMeasureReactiveRepository.findByDescription(description)).thenReturn(unitOfMeasureMono);
 
-        Assertions.assertEquals(description, unitOfMeasureService.findByDescription(description).getDescription());
-        BDDMockito.then(unitOfMeasureRepository).should().findByDescription(ArgumentMatchers.anyString());
+        Assertions.assertEquals(description, unitOfMeasureService.findByDescription(description).block().getDescription());
+        BDDMockito.then(unitOfMeasureReactiveRepository).should().findByDescription(ArgumentMatchers.anyString());
     }
 
     @Test
     void findAll() {
         UnitOfMeasure unitOfMeasure1 = UnitOfMeasure.builder().id("1").description("desciption1").build();
         UnitOfMeasure unitOfMeasure2 = UnitOfMeasure.builder().id("2").description("desciption2").build();
-        List<UnitOfMeasure> unitOfMeasuresList = Arrays.asList(unitOfMeasure1, unitOfMeasure2);
+        Flux<UnitOfMeasure> unitOfMeasureFlux = Flux.just(unitOfMeasure1, unitOfMeasure2);
 
         UnitOfMeasureCommand measureCommand1 = UnitOfMeasureCommand.builder().id("1").description("description1").build();
         UnitOfMeasureCommand measureCommand2 = UnitOfMeasureCommand.builder().id("2").description("description2").build();
 
-        BDDMockito.when(unitOfMeasureRepository.findAll()).thenReturn(unitOfMeasuresList);
+        BDDMockito.when(unitOfMeasureReactiveRepository.findAll()).thenReturn(unitOfMeasureFlux);
         BDDMockito.when(unitOfMeasureToUnitOfMeasureCommand.convert(unitOfMeasure1)).thenReturn(measureCommand1);
         BDDMockito.when(unitOfMeasureToUnitOfMeasureCommand.convert(unitOfMeasure2)).thenReturn(measureCommand2);
 
-        org.assertj.core.api.Assertions.assertThat(unitOfMeasureService.findAllUom()).hasSize(unitOfMeasuresList.size());
-        BDDMockito.then(unitOfMeasureRepository).should().findAll();
+        org.assertj.core.api.Assertions.assertThat(unitOfMeasureService.findAllUom().collectList().block())
+            .hasSize(unitOfMeasureFlux.collectList().block().size());
+        BDDMockito.then(unitOfMeasureReactiveRepository).should().findAll();
         BDDMockito.then(unitOfMeasureToUnitOfMeasureCommand).should(BDDMockito.times(2)).convert(ArgumentMatchers.any(UnitOfMeasure.class));
 
     }

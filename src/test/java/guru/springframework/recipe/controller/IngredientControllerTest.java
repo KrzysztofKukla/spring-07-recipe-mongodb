@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import reactor.core.publisher.Flux;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -92,11 +93,10 @@ class IngredientControllerTest {
         IngredientCommand ingredientCommand = IngredientCommand.builder().id("1").description("description").build();
         UnitOfMeasureCommand unitOfMeasureCommand1 = UnitOfMeasureCommand.builder().id("1").description("desciption1").build();
         UnitOfMeasureCommand unitOfMeasureCommand2 = UnitOfMeasureCommand.builder().id("2").description("desciption2").build();
-        Set<UnitOfMeasureCommand> unitOfMeasuresCommandSet = new HashSet<>(Arrays.asList(unitOfMeasureCommand1, unitOfMeasureCommand2));
 
         //when
         BDDMockito.when(ingredientService.findByRecipeIdAndIngredientId(anyString(), anyString())).thenReturn(ingredientCommand);
-        BDDMockito.when(unitOfMeasureService.findAllUom()).thenReturn(unitOfMeasuresCommandSet);
+        BDDMockito.when(unitOfMeasureService.findAllUom()).thenReturn(Flux.just(unitOfMeasureCommand1, unitOfMeasureCommand2));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/ingredient/1/update"))
             .andExpect(model().attribute("ingredient", Matchers.any(IngredientCommand.class)))
@@ -123,14 +123,10 @@ class IngredientControllerTest {
     @Test
     void newIngredientTest() throws Exception {
         RecipeCommand recipeCommand = RecipeCommand.builder().id("1").description("description").build();
-        Set<UnitOfMeasureCommand> unitOfMeasureSet = new HashSet<>(
-            Arrays.asList(
-                UnitOfMeasureCommand.builder().id("1").build(),
-                UnitOfMeasureCommand.builder().id("2").build()
-            )
-        );
+        UnitOfMeasureCommand unitOfMeasureCommand1 = UnitOfMeasureCommand.builder().id("1").build();
+        UnitOfMeasureCommand unitOfMeasureCommand2 = UnitOfMeasureCommand.builder().id("2").build();
 
-        BDDMockito.when(unitOfMeasureService.findAllUom()).thenReturn(unitOfMeasureSet);
+        BDDMockito.when(unitOfMeasureService.findAllUom()).thenReturn(Flux.just(unitOfMeasureCommand1, unitOfMeasureCommand2));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/ingredient/new"))
             .andExpect(status().isOk())

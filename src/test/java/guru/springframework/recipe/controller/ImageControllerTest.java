@@ -117,10 +117,10 @@ class ImageControllerTest {
     }
 
     @Test
-    void invalidUrlWithNumberFormatException() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/dddd/image"))
-            .andExpect(status().isBadRequest())
-            .andExpect(view().name("400error"));
+    void invalidUrlException() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/recaape"))
+            .andExpect(status().isNotFound());
+//            .andExpect(view().name("404error"));
     }
 
 }
