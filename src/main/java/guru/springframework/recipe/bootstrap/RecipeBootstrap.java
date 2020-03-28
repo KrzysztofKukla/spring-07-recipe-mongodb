@@ -9,6 +9,8 @@ import guru.springframework.recipe.domain.UnitOfMeasure;
 import guru.springframework.recipe.repository.CategoryRepository;
 import guru.springframework.recipe.repository.RecipeRepository;
 import guru.springframework.recipe.repository.UnitOfMeasureRepository;
+import guru.springframework.recipe.repository.reactive.CategoryReactiveRepository;
+import guru.springframework.recipe.repository.reactive.RecipeReactiveRepository;
 import guru.springframework.recipe.repository.reactive.UnitOfMeasureReactiveRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +36,6 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
     private final CategoryRepository categoryRepository;
     private final RecipeRepository recipeRepository;
     private final UnitOfMeasureRepository unitOfMeasureRepository;
-    private final UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository;
 
     @Override
     @Transactional
@@ -43,8 +44,6 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         loadUom();
         recipeRepository.saveAll(getRecipes());
         log.debug("Loading Bootstrap Data");
-
-        log.debug("Count-> {}", unitOfMeasureReactiveRepository.count().block());
     }
 
     private void loadCategories(){
@@ -63,6 +62,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         Category cat4 = new Category();
         cat4.setDescription("Fast Food");
         categoryRepository.save(cat4);
+
     }
 
     private void loadUom(){

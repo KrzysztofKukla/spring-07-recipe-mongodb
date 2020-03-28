@@ -2,6 +2,8 @@ package guru.springframework.recipe.repository;
 
 import guru.springframework.recipe.bootstrap.RecipeBootstrap;
 import guru.springframework.recipe.domain.UnitOfMeasure;
+import guru.springframework.recipe.repository.reactive.CategoryReactiveRepository;
+import guru.springframework.recipe.repository.reactive.RecipeReactiveRepository;
 import guru.springframework.recipe.repository.reactive.UnitOfMeasureReactiveRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,9 +21,8 @@ import java.util.Optional;
  * This is Integration test
  */
 
-//Spring context will start up
-@ExtendWith(SpringExtension.class)
-@DataMongoTest
+//it it Mongo database slice test
+//it brings up only limited Spring context
 class UnitOfMeasureRepositoryIT {
 
     @Autowired
@@ -40,7 +41,7 @@ class UnitOfMeasureRepositoryIT {
     @BeforeEach
     void setUp() {
         resetAll();
-        RecipeBootstrap recipeBootstrap = new RecipeBootstrap(categoryRepository, recipeRepository, unitOfMeasureRepository, unitOfMeasureReactiveRepository);
+        RecipeBootstrap recipeBootstrap = new RecipeBootstrap(categoryRepository, recipeRepository, unitOfMeasureRepository);
         recipeBootstrap.onApplicationEvent(null);
     }
 
