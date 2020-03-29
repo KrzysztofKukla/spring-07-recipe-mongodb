@@ -20,9 +20,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import reactor.core.publisher.Mono;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -56,7 +56,7 @@ class RecipeControllerTest {
         String id = "1";
         Recipe recipe = Recipe.builder().id(id).build();
 
-        BDDMockito.when(recipeService.findById(id)).thenReturn(recipe);
+        BDDMockito.when(recipeService.findById(id)).thenReturn(Mono.just(recipe));
 
         mockMvc.perform(get("/recipe/1/show"))
             .andExpect(status().isOk())
@@ -86,7 +86,7 @@ class RecipeControllerTest {
         String id = "1";
         RecipeCommand recipeCommand = RecipeCommand.builder().id(id).description("description").build();
 
-        BDDMockito.when(recipeService.findRecipeCommandById(id)).thenReturn(recipeCommand);
+        BDDMockito.when(recipeService.findRecipeCommandById(id)).thenReturn(Mono.just(recipeCommand));
 
         mockMvc.perform(get("/recipe/1/update"))
             .andExpect(status().isOk())
@@ -142,7 +142,7 @@ class RecipeControllerTest {
         params.add("description", "abc");
         params.add("directions", "some direction");
 
-        BDDMockito.when(recipeService.saveRecipeCommand(any(RecipeCommand.class))).thenReturn(recipeCommand);
+        BDDMockito.when(recipeService.saveRecipeCommand(any(RecipeCommand.class))).thenReturn(Mono.just(recipeCommand));
 
         mockMvc.perform(post("/recipe")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)

@@ -22,12 +22,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -62,7 +58,7 @@ class IngredientControllerTest {
     void ingredientList() throws Exception {
         RecipeCommand recipeCommand = RecipeCommand.builder().id("1").description("description").build();
 
-        BDDMockito.when(recipeService.findRecipeCommandById("1")).thenReturn(recipeCommand);
+        BDDMockito.when(recipeService.findRecipeCommandById("1")).thenReturn(Mono.just(recipeCommand));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/ingredients"))
             .andExpect(status().isOk())

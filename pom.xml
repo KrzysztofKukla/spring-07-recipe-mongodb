@@ -20,24 +20,22 @@
     </properties>
 
     <dependencies>
-        <!--		<dependency>-->
-        <!--			<groupId>org.springframework.boot</groupId>-->
-        <!--			<artifactId>spring-boot-starter-data-jpa</artifactId>-->
-        <!--		</dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
+
+        <!-- we can use web or webflux, not both -->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-web</artifactId>-->
+<!--        </dependency>-->
+
+        <!-- webflux enables reactive Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
-
-
-        <!--		<dependency>-->
-        <!--			<groupId>org.springframework.boot</groupId>-->
-        <!--			<artifactId>spring-boot-starter-webflux</artifactId>-->
-        <!--		</dependency>-->
 
         <!-- it allows to automatically rebuild the project after changes, without do it manually -->
         <dependency>
@@ -66,13 +64,6 @@
             <version>3.3.7-1</version>
         </dependency>
 
-        <!--		&lt;!&ndash; mySql driver &ndash;&gt;-->
-        <!--		<dependency>-->
-        <!--			<groupId>mysql</groupId>-->
-        <!--			<artifactId>mysql-connector-java</artifactId>-->
-        <!--			&lt;!&ndash; version is inherit from parent pom, not needed here &ndash;&gt;-->
-        <!--		</dependency>-->
-        <!-- noSql Mongodb -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
