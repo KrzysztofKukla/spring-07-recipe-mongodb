@@ -35,6 +35,8 @@ public class ImageController {
 
     @PostMapping("/recipe/{id}/image")
     public String handleImagePost(@PathVariable String id,
+                                  //MultipartFile allows to load file, but need to be refactor to be reactive
+                                  //MultipartFile is blocking file out of the Servlet library
                                   @RequestParam("imagefile") MultipartFile file) {
         imageService.saveImageFile(id, file);
         return "redirect:/recipe/" + id + "/show";

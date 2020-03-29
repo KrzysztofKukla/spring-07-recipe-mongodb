@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Mono;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -60,7 +61,7 @@ class ImageControllerTest {
         RecipeCommand recipeCommand = RecipeCommand.builder().id("1").description("description").build();
 
         //when
-        BDDMockito.when(recipeService.findRecipeCommandById(ArgumentMatchers.anyString())).thenReturn(recipeCommand);
+        BDDMockito.when(recipeService.findRecipeCommandById(ArgumentMatchers.anyString())).thenReturn(Mono.just(recipeCommand));
 
         mockMvc.perform(get("/recipe/1/image"))
             .andExpect(status().isOk())
@@ -104,7 +105,7 @@ class ImageControllerTest {
 
         command.setImage(bytesBoxed);
 
-        BDDMockito.when(recipeService.findRecipeCommandById(anyString())).thenReturn(command);
+        BDDMockito.when(recipeService.findRecipeCommandById(anyString())).thenReturn(Mono.just(command));
 
         //when
         MockHttpServletResponse response = mockMvc.perform(get("/recipe/1/recipeimage"))
