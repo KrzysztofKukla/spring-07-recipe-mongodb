@@ -32,7 +32,8 @@ public class Recipe {
     private Byte[] image;
     private Difficulty difficulty;
     private Notes notes;
-    @DBRef
+
+//    @DBRef  Reactive driver does NOT support @DBRef
     private List<Category> categories = new ArrayList<>();
 
     public void setNotes(Notes notes) {

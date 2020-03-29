@@ -24,7 +24,7 @@ public class Ingredient {
     private String description;
     private BigDecimal amount;
 
-    @DBRef
+//    @DBRef  Reactive driver does NOT support @DBRef
     private UnitOfMeasure unitOfMeasure;
     private Recipe recipe;
 

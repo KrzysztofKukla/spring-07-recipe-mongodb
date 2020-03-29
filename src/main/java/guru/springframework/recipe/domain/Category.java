@@ -10,7 +10,9 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Krzysztof Kukla
@@ -27,6 +29,7 @@ public class Category {
     @Id
     private String id;
     private String description;
-    @DBRef
-    private List<Recipe> recipes = new ArrayList<>();
+
+//    @DBRef  Reactive driver does NOT support @DBRef
+    private Set<Recipe> recipes = new HashSet<>();
 }
