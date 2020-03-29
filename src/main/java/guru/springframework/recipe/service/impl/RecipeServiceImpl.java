@@ -4,13 +4,14 @@ import guru.springframework.recipe.commands.RecipeCommand;
 import guru.springframework.recipe.converter.RecipeCommandToRecipe;
 import guru.springframework.recipe.converter.RecipeToRecipeCommand;
 import guru.springframework.recipe.domain.Recipe;
-import guru.springframework.recipe.exception.NotFoundException;
-import guru.springframework.recipe.repository.RecipeRepository;
+import guru.springframework.recipe.repository.reactive.RecipeReactiveRepository;
 import guru.springframework.recipe.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -23,60 +24,54 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Slf4j
 public class RecipeServiceImpl implements RecipeService {
-    private final RecipeRepository recipeRepository;
+    private final RecipeReactiveRepository recipeReactiveRepository;
 
     private final RecipeCommandToRecipe recipeCommandToRecipe;
     private final RecipeToRecipeCommand recipeToRecipeCommand;
 
     @Override
-    public Recipe findById(final String id) {
+    public Mono<Recipe> findById(final String id) {
         return getRecipe(id);
     }
 
-    //Transactional is required because we are doing conversion outside the scope
-    //so if we do lazy loaded properties we'll receive LazyInitializationException
-    @Transactional
     @Override
-    public RecipeCommand findRecipeCommandById(String id) {
-        return recipeToRecipeCommand.convert(getRecipe(id));
+    public Mono<RecipeCommand> findRecipeCommandById(String id) {
+        Mono<Recipe> recipeMono = getRecipe(id);
+        return recipeMono.map(i -> recipeToRecipeCommand.convert(i));
     }
 
     @Override
-    public Set<Recipe> findAll() {
-        Set<Recipe> all = new HashSet<>();
-        recipeRepository.findAll().forEach(all::add);
-        return all;
+    public Flux<Recipe> findAll() {
+        return recipeReactiveRepository.findAll();
     }
 
     @Override
-    public void saveAll(final Collection<Recipe> recipes) {
-        recipeRepository.saveAll(recipes);
+    public Flux<Recipe> saveAll(final Collection<Recipe> recipes) {
+        return recipeReactiveRepository.saveAll(recipes);
     }
 
     @Override
-    @Transactional
-    public RecipeCommand saveRecipeCommand(RecipeCommand recipeCommand) {
-        //detachedRecipe is still POJO, not Hibernate and this is a reason why is called detachedRecipe from Hibernate context
-        Recipe detachedRecipe = recipeCommandToRecipe.convert(recipeCommand);
-        Recipe savedRecipe = recipeRepository.save(detachedRecipe);
-        log.debug("Saved recipeId " + savedRecipe.getId());
-        return recipeToRecipeCommand.convert(savedRecipe);
+    public Mono<RecipeCommand> saveRecipeCommand(RecipeCommand recipeCommand) {
+        log.debug("Saved recipeId ");
+        return recipeReactiveRepository.save(recipeCommandToRecipe.convert(recipeCommand))
+            .map(i->recipeToRecipeCommand.convert(i));
     }
 
     @Override
-    public void deleteById(String id) {
-        recipeRepository.deleteById(id);
+    public Mono<Void> deleteById(String id) {
+        recipeReactiveRepository.deleteById(id);
         log.debug("Recipe has been deleted");
+        return Mono.empty();
     }
 
     @Override
-    public Recipe saveRecipe(Recipe recipe) {
-
-        return recipeRepository.save(recipe);
+    public Mono<Recipe> saveRecipe(Recipe recipe) {
+        return recipeReactiveRepository.save(recipe);
     }
 
-    private Recipe getRecipe(String id) {
+    private Mono<Recipe> getRecipe(String id) {
         log.debug("find recipe by id-> " + id);
-        return recipeRepository.findById(id).orElseThrow(() -> new NotFoundException("Recipe does not exist for id value-> " + id.toString()));
+        return recipeReactiveRepository.findById(id);
     }
+
 }

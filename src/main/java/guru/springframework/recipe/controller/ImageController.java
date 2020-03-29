@@ -44,7 +44,7 @@ public class ImageController {
     //because we want to return back row image
     @GetMapping("/recipe/{id}/recipeimage")
     public void renderImageFromDb(@PathVariable String id, HttpServletResponse response) throws IOException {
-        RecipeCommand recipeCommand = recipeService.findRecipeCommandById(id);
+        RecipeCommand recipeCommand = recipeService.findRecipeCommandById(id).block();
 
         if (recipeCommand.getImage() != null) {
             byte[] byteArray = new byte[recipeCommand.getImage().length];

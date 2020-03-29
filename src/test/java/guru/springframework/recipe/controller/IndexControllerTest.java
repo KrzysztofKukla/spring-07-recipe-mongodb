@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
@@ -63,11 +64,11 @@ class IndexControllerTest {
         String unitOfMeasureDescription = "Cup";
         UnitOfMeasure unitOfMeasure = UnitOfMeasure.builder().description(unitOfMeasureDescription).build();
 
-        BDDMockito.when(recipeService.findAll()).thenReturn(recipes);
-        BDDMockito.when(categoryService.findByDescription(categoryDescription)).thenReturn(category);
+        BDDMockito.when(recipeService.findAll()).thenReturn(Flux.fromIterable(recipes));
+        BDDMockito.when(categoryService.findByDescription(categoryDescription)).thenReturn(Mono.just(category));
         BDDMockito.when(unitOfMeasureService.findByDescription(unitOfMeasureDescription)).thenReturn(Mono.just(unitOfMeasure));
 
-        ArgumentCaptor<Set<Recipe>> argumentCaptor = ArgumentCaptor.forClass(Set.class);
+        ArgumentCaptor<Flux<Recipe>> argumentCaptor = ArgumentCaptor.forClass(Flux.class);
 
         Assertions.assertEquals("index", indexController.index(model));
         BDDMockito.then(recipeService).should().findAll();
@@ -76,7 +77,7 @@ class IndexControllerTest {
         BDDMockito.then(model).should(BDDMockito.times(1))
             .addAttribute(ArgumentMatchers.matches("recipes"), ArgumentMatchers.anySet());
         BDDMockito.then(model).should().addAttribute(ArgumentMatchers.matches("recipes"), argumentCaptor.capture());
-        Assertions.assertEquals(recipes.size(), argumentCaptor.getValue().size());
+        Assertions.assertEquals(recipes.size(), argumentCaptor.getAllValues().size());
     }
 
     @Test

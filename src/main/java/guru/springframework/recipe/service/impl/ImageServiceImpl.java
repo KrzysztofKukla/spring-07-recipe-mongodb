@@ -2,12 +2,14 @@ package guru.springframework.recipe.service.impl;
 
 import guru.springframework.recipe.domain.Recipe;
 import guru.springframework.recipe.repository.RecipeRepository;
+import guru.springframework.recipe.repository.reactive.RecipeReactiveRepository;
 import guru.springframework.recipe.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 
@@ -19,12 +21,12 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
 
-    private final RecipeRepository recipeRepository;
+    private final RecipeReactiveRepository recipeReactiveRepository;
 
     @Override
     @Transactional
-    public void saveImageFile(String id, MultipartFile file) {
-        Recipe recipe = recipeRepository.findById(id).orElseThrow(NoSuchFieldError::new);
+    public Mono<Void> saveImageFile(String id, MultipartFile file) {
+        Mono<Recipe> recipeMono = recipeReactiveRepository.findById(id);
         try {
             Byte[] byteObjects = new Byte[file.getBytes().length];
 
@@ -34,14 +36,16 @@ public class ImageServiceImpl implements ImageService {
                 byteObjects[i++] = b;
             }
 
+            Recipe recipe = recipeMono.block();
             recipe.setImage(byteObjects);
-            recipeRepository.save(recipe);
+            recipeReactiveRepository.save(recipe);
 
         } catch (IOException e) {
 
             log.error("Cannot save image ", e);
             //TODO handel better
         }
+        return Mono.empty();
     }
 
 }
