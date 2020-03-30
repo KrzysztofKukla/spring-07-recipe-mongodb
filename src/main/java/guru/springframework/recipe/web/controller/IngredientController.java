@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import reactor.core.publisher.Flux;
 
 /**
  * @author Krzysztof Kukla
@@ -56,9 +57,14 @@ public class IngredientController {
                                          @PathVariable String ingredientId,
                                          Model model) {
         model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(recipeId, ingredientId).block());
-        model.addAttribute("uomList", unitOfMeasureService.findAllUom());
 
         return "recipe/ingredient/ingredientform";
+    }
+
+    //with every request this is gonna be bound with  model.addAttribute("uomList", unitOfMeasureService.findAllUom());
+    @ModelAttribute("uomList")
+    public Flux<UnitOfMeasureDto> populateUomList() {
+        return unitOfMeasureService.findAllUom();
     }
 
     @PostMapping("/recipe/{recipeId}/ingredient")
@@ -71,7 +77,7 @@ public class IngredientController {
             bindingResult.getAllErrors().forEach(error -> {
                 log.debug(error.toString());
             });
-            model.addAttribute("uomList", unitOfMeasureService.findAllUom());
+//            model.addAttribute("uomList", unitOfMeasureService.findAllUom()); this will be bound with @ModelAttribute("uomList")
             return INGREDIENT_FORM_URL;
         }
 
@@ -85,7 +91,7 @@ public class IngredientController {
     public String newIngredient(@PathVariable String recipeId, Model model) {
         IngredientDto newIngredientDto = IngredientDto.builder().recipeId(recipeId).unitOfMeasure(new UnitOfMeasureDto()).build();
         model.addAttribute("ingredient", newIngredientDto);
-        model.addAttribute("uomList", unitOfMeasureService.findAllUom());
+//        model.addAttribute("uomList", unitOfMeasureService.findAllUom()); this will be bound with @ModelAttribute("uomList")
 
         return "recipe/ingredient/ingredientform";
     }
