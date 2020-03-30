@@ -6,6 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.math.BigDecimal;
 
 /**
@@ -17,11 +21,16 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 public class IngredientDto {
+
+    @Null
     private String id;
     private String recipeId;
+    @NotBlank
     private String description;
+    @NotNull
+    @Min(1)
     private BigDecimal amount;
+    @NotNull
     private UnitOfMeasureDto unitOfMeasure;
-//    private RecipeCommand recipeCommand;
 
 }
