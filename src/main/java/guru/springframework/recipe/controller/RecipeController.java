@@ -7,14 +7,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import reactor.core.publisher.Mono;
-
-import javax.validation.Valid;
 
 /**
  * @author Krzysztof Kukla
@@ -26,6 +25,13 @@ import javax.validation.Valid;
 public class RecipeController {
     public static final String RECIPE_RECIPE_FORM_URL = "recipe/recipeForm";
     private final RecipeService recipeService;
+
+    private WebDataBinder webDataBinder;
+
+    @InitBinder
+    public void initiateBinder(WebDataBinder webDataBinder) {
+        this.webDataBinder = webDataBinder;
+    }
 
     @GetMapping("/new")
     public String showById(Model model) {
@@ -49,14 +55,17 @@ public class RecipeController {
 
     @PostMapping
     //@ModelAttribute allows to bind form post parameters to RecipeCommand object
-    public String saveOrUpdate(@Valid @ModelAttribute("recipe") RecipeCommand recipe, BindingResult bindingResult) {
+    public String saveOrUpdate(@ModelAttribute("recipe") RecipeCommand recipe) {
+        webDataBinder.validate();
+        BindingResult bindingResult = webDataBinder.getBindingResult();
+
         if (bindingResult.hasErrors()) {
             bindingResult.getAllErrors().forEach(objectError -> {
                 log.debug(objectError.toString());
             });
             return RECIPE_RECIPE_FORM_URL;
         }
-        Mono<RecipeCommand> recipeCommandMono = recipeService.saveRecipeCommand(recipe);
+        RecipeCommand recipeCommandMono = recipeService.saveRecipeCommand(recipe).block();
         return "redirect:/recipe/" + recipeCommandMono.getId() + "/show";
     }
 
