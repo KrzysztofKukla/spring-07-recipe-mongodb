@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author Krzysztof Kukla
  */
 @Controller
-@RequestMapping(value = "recipe")
+@RequestMapping(value = "/v1/recipes")
 @RequiredArgsConstructor
 @Slf4j
 public class RecipeController {

@@ -21,7 +21,7 @@ public class WebConfig {
     //here we define ServerResponse with ok status, contentType and body for this particular url request GET '/api/recipes'
     //for body we are going to call out 'recipeService.findAll()
     public RouterFunction<?> routes(RecipeService recipeService) {
-        return RouterFunctions.route(RequestPredicates.GET("/api/recipes"),
+        return RouterFunctions.route(RequestPredicates.GET("/v1/recipes"),
             serverRequest -> ServerResponse
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
