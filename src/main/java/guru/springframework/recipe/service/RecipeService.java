@@ -1,7 +1,7 @@
 package guru.springframework.recipe.service;
 
-import guru.springframework.recipe.commands.RecipeCommand;
 import guru.springframework.recipe.domain.Recipe;
+import guru.springframework.recipe.web.model.RecipeDto;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -17,11 +17,11 @@ public interface RecipeService {
 
     Flux<Recipe> saveAll(Collection<Recipe> recipes);
 
-    Mono<RecipeCommand> findRecipeCommandById(String id);
+    Mono<RecipeDto> findRecipeCommandById(String id);
 
     Mono<Recipe> saveRecipe(Recipe recipe);
 
-    Mono<RecipeCommand> saveRecipeCommand(RecipeCommand recipeCommand);
+    Mono<RecipeDto> saveRecipeCommand(RecipeDto recipeDto);
 
     Mono<Void> deleteById(String id);
 

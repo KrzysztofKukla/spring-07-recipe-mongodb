@@ -1,11 +1,16 @@
 package guru.springframework.recipe.converter;
 
-import guru.springframework.recipe.commands.RecipeCommand;
 import guru.springframework.recipe.domain.Category;
 import guru.springframework.recipe.domain.Difficulty;
 import guru.springframework.recipe.domain.Ingredient;
 import guru.springframework.recipe.domain.Notes;
 import guru.springframework.recipe.domain.Recipe;
+import guru.springframework.recipe.web.mapper.CategoryToCategoryCommand;
+import guru.springframework.recipe.web.mapper.IngredientToIngredientCommand;
+import guru.springframework.recipe.web.mapper.NotesToNotesCommand;
+import guru.springframework.recipe.web.mapper.RecipeToRecipeCommand;
+import guru.springframework.recipe.web.mapper.UnitOfMeasureToUnitOfMeasureCommand;
+import guru.springframework.recipe.web.model.RecipeDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class RecipeToRecipeCommandTest {
+public class RecipeToRecipeDtoTest {
 
     public static final String RECIPE_ID = "1";
     public static final Integer COOK_TIME = Integer.valueOf("5");
@@ -87,7 +92,7 @@ public class RecipeToRecipeCommandTest {
         recipe.getIngredients().add(ingredient2);
 
         //when
-        final RecipeCommand command = converter.convert(recipe);
+        final RecipeDto command = converter.convert(recipe);
 
         //then
         assertNotNull(command);

@@ -1,7 +1,8 @@
 package guru.springframework.recipe.converter;
 
-import guru.springframework.recipe.commands.UnitOfMeasureCommand;
 import guru.springframework.recipe.domain.UnitOfMeasure;
+import guru.springframework.recipe.web.mapper.UnitOfMeasureToUnitOfMeasureCommand;
+import guru.springframework.recipe.web.model.UnitOfMeasureDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 /**
  * Created by jt on 6/21/17.
  */
-public class UnitOfMeasureToUnitOfMeasureCommandTest {
+public class UnitOfMeasureToUnitOfMeasureDtoTest {
 
     public static final String DESCRIPTION = "description";
     public static final String LONG_VALUE = "1";
@@ -41,7 +42,7 @@ public class UnitOfMeasureToUnitOfMeasureCommandTest {
         uom.setId(LONG_VALUE);
         uom.setDescription(DESCRIPTION);
         //when
-        final UnitOfMeasureCommand uomc = converter.convert(uom);
+        final UnitOfMeasureDto uomc = converter.convert(uom);
 
         //then
         assertEquals(LONG_VALUE, uomc.getId());

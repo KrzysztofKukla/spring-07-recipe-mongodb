@@ -1,9 +1,11 @@
 package guru.springframework.recipe.converter;
 
-import guru.springframework.recipe.commands.IngredientCommand;
-import guru.springframework.recipe.commands.UnitOfMeasureCommand;
 import guru.springframework.recipe.domain.Ingredient;
 import guru.springframework.recipe.domain.Recipe;
+import guru.springframework.recipe.web.mapper.IngredientCommandToIngredient;
+import guru.springframework.recipe.web.mapper.UnitOfMeasureCommandToUnitOfMeasure;
+import guru.springframework.recipe.web.model.IngredientDto;
+import guru.springframework.recipe.web.model.UnitOfMeasureDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -35,19 +37,19 @@ public class IngredientCommandToIngredientTest {
 
     @Test
     void testEmptyObject() throws Exception {
-        assertNotNull(converter.convert(new IngredientCommand()));
+        assertNotNull(converter.convert(new IngredientDto()));
     }
 
     @Test
     void convert() throws Exception {
         //given
-        final IngredientCommand command = new IngredientCommand();
+        final IngredientDto command = new IngredientDto();
         command.setId(ID_VALUE);
         command.setAmount(AMOUNT);
         command.setDescription(DESCRIPTION);
-        final UnitOfMeasureCommand unitOfMeasureCommand = new UnitOfMeasureCommand();
-        unitOfMeasureCommand.setId(UOM_ID);
-        command.setUnitOfMeasure(unitOfMeasureCommand);
+        final UnitOfMeasureDto unitOfMeasureDto = new UnitOfMeasureDto();
+        unitOfMeasureDto.setId(UOM_ID);
+        command.setUnitOfMeasure(unitOfMeasureDto);
 
         //when
         final Ingredient ingredient = converter.convert(command);
@@ -64,11 +66,11 @@ public class IngredientCommandToIngredientTest {
     @Test
     void convertWithNullUOM() throws Exception {
         //given
-        final IngredientCommand command = new IngredientCommand();
+        final IngredientDto command = new IngredientDto();
         command.setId(ID_VALUE);
         command.setAmount(AMOUNT);
         command.setDescription(DESCRIPTION);
-        final UnitOfMeasureCommand unitOfMeasureCommand = new UnitOfMeasureCommand();
+        final UnitOfMeasureDto unitOfMeasureDto = new UnitOfMeasureDto();
 
         //when
         final Ingredient ingredient = converter.convert(command);

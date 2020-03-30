@@ -6,6 +6,7 @@ import guru.springframework.recipe.domain.UnitOfMeasure;
 import guru.springframework.recipe.service.CategoryService;
 import guru.springframework.recipe.service.RecipeService;
 import guru.springframework.recipe.service.UnitOfMeasureService;
+import guru.springframework.recipe.web.controller.IndexController;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

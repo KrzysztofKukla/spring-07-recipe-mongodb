@@ -1,7 +1,8 @@
 package guru.springframework.recipe.converter;
 
-import guru.springframework.recipe.commands.UnitOfMeasureCommand;
 import guru.springframework.recipe.domain.UnitOfMeasure;
+import guru.springframework.recipe.web.mapper.UnitOfMeasureCommandToUnitOfMeasure;
+import guru.springframework.recipe.web.model.UnitOfMeasureDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,13 +30,13 @@ public class UnitOfMeasureCommandToUnitOfMeasureTest {
 
     @Test
     void testEmptyObject() throws Exception {
-        assertNotNull(converter.convert(new UnitOfMeasureCommand()));
+        assertNotNull(converter.convert(new UnitOfMeasureDto()));
     }
 
     @Test
     void convert() throws Exception {
         //given
-        final UnitOfMeasureCommand command = new UnitOfMeasureCommand();
+        final UnitOfMeasureDto command = new UnitOfMeasureDto();
         command.setId(LONG_VALUE);
         command.setDescription(DESCRIPTION);
 

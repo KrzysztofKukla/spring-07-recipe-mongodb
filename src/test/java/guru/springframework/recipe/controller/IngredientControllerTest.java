@@ -1,11 +1,12 @@
 package guru.springframework.recipe.controller;
 
-import guru.springframework.recipe.commands.IngredientCommand;
-import guru.springframework.recipe.commands.RecipeCommand;
-import guru.springframework.recipe.commands.UnitOfMeasureCommand;
 import guru.springframework.recipe.service.IngredientService;
 import guru.springframework.recipe.service.RecipeService;
 import guru.springframework.recipe.service.UnitOfMeasureService;
+import guru.springframework.recipe.web.controller.IngredientController;
+import guru.springframework.recipe.web.model.IngredientDto;
+import guru.springframework.recipe.web.model.RecipeDto;
+import guru.springframework.recipe.web.model.UnitOfMeasureDto;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,13 +57,13 @@ class IngredientControllerTest {
 
     @Test
     void ingredientList() throws Exception {
-        RecipeCommand recipeCommand = RecipeCommand.builder().id("1").description("description").build();
+        RecipeDto recipeDto = RecipeDto.builder().id("1").description("description").build();
 
-        BDDMockito.when(recipeService.findRecipeCommandById("1")).thenReturn(Mono.just(recipeCommand));
+        BDDMockito.when(recipeService.findRecipeCommandById("1")).thenReturn(Mono.just(recipeDto));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/ingredients"))
             .andExpect(status().isOk())
-            .andExpect(MockMvcResultMatchers.model().attribute("recipe", Matchers.any(RecipeCommand.class)))
+            .andExpect(MockMvcResultMatchers.model().attribute("recipe", Matchers.any(RecipeDto.class)))
             .andExpect(MockMvcResultMatchers.view().name("recipe/ingredient/list"));
         BDDMockito.then(recipeService).should().findRecipeCommandById(anyString());
     }
@@ -70,15 +71,15 @@ class IngredientControllerTest {
     @Test
     void showIngredientTest() throws Exception {
         //given
-        IngredientCommand ingredientCommand = IngredientCommand.builder().id("1").description("description").build();
+        IngredientDto ingredientDto = IngredientDto.builder().id("1").description("description").build();
 
         //when
-        BDDMockito.when(ingredientService.findByRecipeIdAndIngredientId("1", "1")).thenReturn(Mono.just(ingredientCommand));
+        BDDMockito.when(ingredientService.findByRecipeIdAndIngredientId("1", "1")).thenReturn(Mono.just(ingredientDto));
 
         //then
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/ingredient/1/show"))
             .andExpect(status().isOk())
-            .andExpect(model().attribute("ingredient", Matchers.any(IngredientCommand.class)))
+            .andExpect(model().attribute("ingredient", Matchers.any(IngredientDto.class)))
             .andExpect(view().name("recipe/ingredient/show"));
         BDDMockito.then(ingredientService.findByRecipeIdAndIngredientId(anyString(), anyString()));
 
@@ -87,16 +88,16 @@ class IngredientControllerTest {
     @Test
     void updateRecipeIngredientTest() throws Exception {
         //given
-        IngredientCommand ingredientCommand = IngredientCommand.builder().id("1").description("description").build();
-        UnitOfMeasureCommand unitOfMeasureCommand1 = UnitOfMeasureCommand.builder().id("1").description("desciption1").build();
-        UnitOfMeasureCommand unitOfMeasureCommand2 = UnitOfMeasureCommand.builder().id("2").description("desciption2").build();
+        IngredientDto ingredientDto = IngredientDto.builder().id("1").description("description").build();
+        UnitOfMeasureDto unitOfMeasureDto1 = UnitOfMeasureDto.builder().id("1").description("desciption1").build();
+        UnitOfMeasureDto unitOfMeasureDto2 = UnitOfMeasureDto.builder().id("2").description("desciption2").build();
 
         //when
-        BDDMockito.when(ingredientService.findByRecipeIdAndIngredientId(anyString(), anyString())).thenReturn(Mono.just(ingredientCommand));
-        BDDMockito.when(unitOfMeasureService.findAllUom()).thenReturn(Flux.just(unitOfMeasureCommand1, unitOfMeasureCommand2));
+        BDDMockito.when(ingredientService.findByRecipeIdAndIngredientId(anyString(), anyString())).thenReturn(Mono.just(ingredientDto));
+        BDDMockito.when(unitOfMeasureService.findAllUom()).thenReturn(Flux.just(unitOfMeasureDto1, unitOfMeasureDto2));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/ingredient/1/update"))
-            .andExpect(model().attribute("ingredient", Matchers.any(IngredientCommand.class)))
+            .andExpect(model().attribute("ingredient", Matchers.any(IngredientDto.class)))
             .andExpect(model().attribute("uomList", Matchers.any(Set.class)))
             .andExpect(view().name("recipe/ingredient/ingredientform"));
         BDDMockito.then(ingredientService).should().findByRecipeIdAndIngredientId(anyString(), anyString());
@@ -107,27 +108,27 @@ class IngredientControllerTest {
     void saveOrUpdateTest() throws Exception {
         String commandId = "1";
         String recipeId = "1";
-        IngredientCommand ingredientCommand = IngredientCommand.builder().id(commandId).recipeId(recipeId).description("desciption").build();
+        IngredientDto ingredientDto = IngredientDto.builder().id(commandId).recipeId(recipeId).description("desciption").build();
 
-        BDDMockito.when(ingredientService.saveIngredientCommand(ArgumentMatchers.any(IngredientCommand.class))).thenReturn(Mono.just(ingredientCommand));
+        BDDMockito.when(ingredientService.saveIngredientCommand(ArgumentMatchers.any(IngredientDto.class))).thenReturn(Mono.just(ingredientDto));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/recipe/1/ingredient"))
             .andExpect(status().is3xxRedirection())
-            .andExpect(view().name("redirect:/recipe/" + ingredientCommand.getRecipeId() + "/ingredient/" + ingredientCommand.getId() + "/show"));
-        BDDMockito.then(ingredientService).should().saveIngredientCommand(ArgumentMatchers.any(IngredientCommand.class));
+            .andExpect(view().name("redirect:/recipe/" + ingredientDto.getRecipeId() + "/ingredient/" + ingredientDto.getId() + "/show"));
+        BDDMockito.then(ingredientService).should().saveIngredientCommand(ArgumentMatchers.any(IngredientDto.class));
     }
 
     @Test
     void newIngredientTest() throws Exception {
-        RecipeCommand recipeCommand = RecipeCommand.builder().id("1").description("description").build();
-        UnitOfMeasureCommand unitOfMeasureCommand1 = UnitOfMeasureCommand.builder().id("1").build();
-        UnitOfMeasureCommand unitOfMeasureCommand2 = UnitOfMeasureCommand.builder().id("2").build();
+        RecipeDto recipeDto = RecipeDto.builder().id("1").description("description").build();
+        UnitOfMeasureDto unitOfMeasureDto1 = UnitOfMeasureDto.builder().id("1").build();
+        UnitOfMeasureDto unitOfMeasureDto2 = UnitOfMeasureDto.builder().id("2").build();
 
-        BDDMockito.when(unitOfMeasureService.findAllUom()).thenReturn(Flux.just(unitOfMeasureCommand1, unitOfMeasureCommand2));
+        BDDMockito.when(unitOfMeasureService.findAllUom()).thenReturn(Flux.just(unitOfMeasureDto1, unitOfMeasureDto2));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/ingredient/new"))
             .andExpect(status().isOk())
-            .andExpect(model().attribute("ingredient", Matchers.any(IngredientCommand.class)))
+            .andExpect(model().attribute("ingredient", Matchers.any(IngredientDto.class)))
             .andExpect(model().attribute("uomList", Matchers.any(Set.class)))
             .andExpect(view().name("recipe/ingredient/ingredientform"));
 

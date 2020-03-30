@@ -1,4 +1,4 @@
-package guru.springframework.recipe.commands;
+package guru.springframework.recipe.web.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UnitOfMeasureCommand {
+public class UnitOfMeasureDto {
     private String id;
     private String description;
 

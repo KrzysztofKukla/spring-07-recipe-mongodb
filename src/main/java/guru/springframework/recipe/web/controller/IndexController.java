@@ -1,4 +1,4 @@
-package guru.springframework.recipe.controller;
+package guru.springframework.recipe.web.controller;
 
 import guru.springframework.recipe.service.CategoryService;
 import guru.springframework.recipe.service.RecipeService;

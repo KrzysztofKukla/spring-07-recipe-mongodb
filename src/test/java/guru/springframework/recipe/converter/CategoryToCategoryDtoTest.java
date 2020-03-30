@@ -1,7 +1,8 @@
 package guru.springframework.recipe.converter;
 
-import guru.springframework.recipe.commands.CategoryCommand;
 import guru.springframework.recipe.domain.Category;
+import guru.springframework.recipe.web.mapper.CategoryToCategoryCommand;
+import guru.springframework.recipe.web.model.CategoryDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 /**
  * Created by jt on 6/21/17.
  */
-public class CategoryToCategoryCommandTest {
+public class CategoryToCategoryDtoTest {
 
     public static final String ID_VALUE = "1";
     public static final String DESCRIPTION = "descript";
@@ -41,11 +42,11 @@ public class CategoryToCategoryCommandTest {
         category.setDescription(DESCRIPTION);
 
         //when
-        final CategoryCommand categoryCommand = convter.convert(category);
+        final CategoryDto categoryDto = convter.convert(category);
 
         //then
-        assertEquals(ID_VALUE, categoryCommand.getId());
-        assertEquals(DESCRIPTION, categoryCommand.getDescription());
+        assertEquals(ID_VALUE, categoryDto.getId());
+        assertEquals(DESCRIPTION, categoryDto.getDescription());
 
     }
 

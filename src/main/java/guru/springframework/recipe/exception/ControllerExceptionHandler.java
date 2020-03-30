@@ -1,4 +1,4 @@
-package guru.springframework.recipe.controller.exceptionhandler;
+package guru.springframework.recipe.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;

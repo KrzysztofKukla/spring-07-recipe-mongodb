@@ -1,11 +1,11 @@
 package guru.springframework.recipe.service.impl;
 
-import guru.springframework.recipe.commands.RecipeCommand;
-import guru.springframework.recipe.converter.RecipeCommandToRecipe;
-import guru.springframework.recipe.converter.RecipeToRecipeCommand;
 import guru.springframework.recipe.domain.Recipe;
 import guru.springframework.recipe.repository.RecipeRepository;
 import guru.springframework.recipe.service.RecipeService;
+import guru.springframework.recipe.web.mapper.RecipeCommandToRecipe;
+import guru.springframework.recipe.web.mapper.RecipeToRecipeCommand;
+import guru.springframework.recipe.web.model.RecipeDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,27 +43,27 @@ class RecipeServiceIT {
         //given
         Iterable<Recipe> recipes = recipeRepository.findAll();
         Recipe testRecipe = recipes.iterator().next();
-        RecipeCommand testRecipeCommand = recipeToRecipeCommand.convert(testRecipe);
+        RecipeDto testRecipeDto = recipeToRecipeCommand.convert(testRecipe);
 
         //when
-        testRecipeCommand.setDescription(DESCRIPTION);
-        RecipeCommand savedRecipeCommand = recipeService.saveRecipeCommand(testRecipeCommand).block();
+        testRecipeDto.setDescription(DESCRIPTION);
+        RecipeDto savedRecipeDto = recipeService.saveRecipeCommand(testRecipeDto).block();
 
         //then
-        assertEquals(DESCRIPTION, savedRecipeCommand.getDescription());
-        assertEquals(testRecipe.getId(), savedRecipeCommand.getId());
-        assertEquals(testRecipe.getCategories().size(), savedRecipeCommand.getCategories().size());
-        assertEquals(testRecipe.getIngredients().size(), savedRecipeCommand.getIngredients().size());
+        assertEquals(DESCRIPTION, savedRecipeDto.getDescription());
+        assertEquals(testRecipe.getId(), savedRecipeDto.getId());
+        assertEquals(testRecipe.getCategories().size(), savedRecipeDto.getCategories().size());
+        assertEquals(testRecipe.getIngredients().size(), savedRecipeDto.getIngredients().size());
     }
 
     @Test
     void findCommandByIdTest() {
         Recipe recipe = Recipe.builder().id("1").description("description").build();
 
-        RecipeCommand recipeCommand = recipeToRecipeCommand.convert(recipe);
+        RecipeDto recipeDto = recipeToRecipeCommand.convert(recipe);
 
-        Assertions.assertEquals(recipe.getId(), recipeCommand.getId());
-        Assertions.assertEquals(recipe.getDescription(), recipeCommand.getDescription());
+        Assertions.assertEquals(recipe.getId(), recipeDto.getId());
+        Assertions.assertEquals(recipe.getDescription(), recipeDto.getDescription());
 
     }
 

@@ -1,10 +1,10 @@
-package guru.springframework.recipe.controller;
+package guru.springframework.recipe.web.controller;
 
-import guru.springframework.recipe.commands.IngredientCommand;
-import guru.springframework.recipe.commands.UnitOfMeasureCommand;
 import guru.springframework.recipe.service.IngredientService;
 import guru.springframework.recipe.service.RecipeService;
 import guru.springframework.recipe.service.UnitOfMeasureService;
+import guru.springframework.recipe.web.model.IngredientDto;
+import guru.springframework.recipe.web.model.UnitOfMeasureDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -41,8 +41,8 @@ public class IngredientController {
     }
 
     @PostMapping("/recipe/{recipeId}/ingredient")
-    public String saveOrUpdate(@ModelAttribute IngredientCommand command) {
-        IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command).block();
+    public String saveOrUpdate(@ModelAttribute IngredientDto command) {
+        IngredientDto savedCommand = ingredientService.saveIngredientCommand(command).block();
         log.debug("Saved recipeId-> " + savedCommand.getRecipeId());
         log.debug("Saved ingredientId-> " + savedCommand.getId());
         return "redirect:/recipe/" + savedCommand.getRecipeId() + "/ingredient/" + savedCommand.getId() + "/show";
@@ -50,8 +50,8 @@ public class IngredientController {
 
     @GetMapping("/recipe/{recipeId}/ingredient/new")
     public String newIngredient(@PathVariable String recipeId, Model model) {
-        IngredientCommand newIngredientCommand = IngredientCommand.builder().recipeId(recipeId).unitOfMeasure(new UnitOfMeasureCommand()).build();
-        model.addAttribute("ingredient", newIngredientCommand);
+        IngredientDto newIngredientDto = IngredientDto.builder().recipeId(recipeId).unitOfMeasure(new UnitOfMeasureDto()).build();
+        model.addAttribute("ingredient", newIngredientDto);
         model.addAttribute("uomList", unitOfMeasureService.findAllUom());
 
         return "recipe/ingredient/ingredientform";

@@ -1,4 +1,4 @@
-package guru.springframework.recipe.commands;
+package guru.springframework.recipe.web.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +10,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class NotesCommand {
+public class NotesDto {
     private String id;
-    private RecipeCommand recipe;
+    private RecipeDto recipe;
     private String recipeNotes;
 
 }

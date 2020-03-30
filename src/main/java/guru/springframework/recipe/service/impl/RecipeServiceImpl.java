@@ -1,21 +1,18 @@
 package guru.springframework.recipe.service.impl;
 
-import guru.springframework.recipe.commands.RecipeCommand;
-import guru.springframework.recipe.converter.RecipeCommandToRecipe;
-import guru.springframework.recipe.converter.RecipeToRecipeCommand;
 import guru.springframework.recipe.domain.Recipe;
 import guru.springframework.recipe.repository.reactive.RecipeReactiveRepository;
 import guru.springframework.recipe.service.RecipeService;
+import guru.springframework.recipe.web.mapper.RecipeCommandToRecipe;
+import guru.springframework.recipe.web.mapper.RecipeToRecipeCommand;
+import guru.springframework.recipe.web.model.RecipeDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Krzysztof Kukla
@@ -35,7 +32,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Mono<RecipeCommand> findRecipeCommandById(String id) {
+    public Mono<RecipeDto> findRecipeCommandById(String id) {
         Mono<Recipe> recipeMono = getRecipe(id);
         return recipeMono.map(i -> recipeToRecipeCommand.convert(i));
     }
@@ -51,10 +48,10 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Mono<RecipeCommand> saveRecipeCommand(RecipeCommand recipeCommand) {
+    public Mono<RecipeDto> saveRecipeCommand(RecipeDto recipeDto) {
         log.debug("Saved recipeId ");
-        return recipeReactiveRepository.save(recipeCommandToRecipe.convert(recipeCommand))
-            .map(i->recipeToRecipeCommand.convert(i));
+        return recipeReactiveRepository.save(recipeCommandToRecipe.convert(recipeDto))
+            .map(i -> recipeToRecipeCommand.convert(i));
     }
 
     @Override

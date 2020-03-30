@@ -1,10 +1,9 @@
 package guru.springframework.recipe.service.impl;
 
-import guru.springframework.recipe.commands.UnitOfMeasureCommand;
-import guru.springframework.recipe.converter.UnitOfMeasureToUnitOfMeasureCommand;
 import guru.springframework.recipe.domain.UnitOfMeasure;
-import guru.springframework.recipe.repository.UnitOfMeasureRepository;
 import guru.springframework.recipe.repository.reactive.UnitOfMeasureReactiveRepository;
+import guru.springframework.recipe.web.mapper.UnitOfMeasureToUnitOfMeasureCommand;
+import guru.springframework.recipe.web.model.UnitOfMeasureDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,10 +14,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Krzysztof Kukla
@@ -53,8 +48,8 @@ class UnitOfMeasureServiceImplTest {
         UnitOfMeasure unitOfMeasure2 = UnitOfMeasure.builder().id("2").description("desciption2").build();
         Flux<UnitOfMeasure> unitOfMeasureFlux = Flux.just(unitOfMeasure1, unitOfMeasure2);
 
-        UnitOfMeasureCommand measureCommand1 = UnitOfMeasureCommand.builder().id("1").description("description1").build();
-        UnitOfMeasureCommand measureCommand2 = UnitOfMeasureCommand.builder().id("2").description("description2").build();
+        UnitOfMeasureDto measureCommand1 = UnitOfMeasureDto.builder().id("1").description("description1").build();
+        UnitOfMeasureDto measureCommand2 = UnitOfMeasureDto.builder().id("2").description("description2").build();
 
         BDDMockito.when(unitOfMeasureReactiveRepository.findAll()).thenReturn(unitOfMeasureFlux);
         BDDMockito.when(unitOfMeasureToUnitOfMeasureCommand.convert(unitOfMeasure1)).thenReturn(measureCommand1);

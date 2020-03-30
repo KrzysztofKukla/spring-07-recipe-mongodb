@@ -1,9 +1,11 @@
 package guru.springframework.recipe.converter;
 
-import guru.springframework.recipe.commands.IngredientCommand;
 import guru.springframework.recipe.domain.Ingredient;
 import guru.springframework.recipe.domain.Recipe;
 import guru.springframework.recipe.domain.UnitOfMeasure;
+import guru.springframework.recipe.web.mapper.IngredientToIngredientCommand;
+import guru.springframework.recipe.web.mapper.UnitOfMeasureToUnitOfMeasureCommand;
+import guru.springframework.recipe.web.model.IngredientDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 /**
  * Created by jt on 6/21/17.
  */
-public class IngredientToIngredientCommandTest {
+public class IngredientToIngredientDtoTest {
 
     public static final Recipe RECIPE = new Recipe();
     public static final BigDecimal AMOUNT = new BigDecimal("1");
@@ -51,13 +53,13 @@ public class IngredientToIngredientCommandTest {
         ingredient.setDescription(DESCRIPTION);
         ingredient.setUnitOfMeasure(null);
         //when
-        final IngredientCommand ingredientCommand = converter.convert(ingredient);
+        final IngredientDto ingredientDto = converter.convert(ingredient);
         //then
-        assertNull(ingredientCommand.getUnitOfMeasure());
-        assertEquals(ID_VALUE, ingredientCommand.getId());
+        assertNull(ingredientDto.getUnitOfMeasure());
+        assertEquals(ID_VALUE, ingredientDto.getId());
         // assertEquals(RECIPE, ingredientCommand.get);
-        assertEquals(AMOUNT, ingredientCommand.getAmount());
-        assertEquals(DESCRIPTION, ingredientCommand.getDescription());
+        assertEquals(AMOUNT, ingredientDto.getAmount());
+        assertEquals(DESCRIPTION, ingredientDto.getDescription());
     }
 
     @Test
@@ -74,14 +76,14 @@ public class IngredientToIngredientCommandTest {
 
         ingredient.setUnitOfMeasure(uom);
         //when
-        final IngredientCommand ingredientCommand = converter.convert(ingredient);
+        final IngredientDto ingredientDto = converter.convert(ingredient);
         //then
-        assertEquals(ID_VALUE, ingredientCommand.getId());
-        assertNotNull(ingredientCommand.getUnitOfMeasure());
-        assertEquals(UOM_ID, ingredientCommand.getUnitOfMeasure().getId());
+        assertEquals(ID_VALUE, ingredientDto.getId());
+        assertNotNull(ingredientDto.getUnitOfMeasure());
+        assertEquals(UOM_ID, ingredientDto.getUnitOfMeasure().getId());
         // assertEquals(RECIPE, ingredientCommand.get);
-        assertEquals(AMOUNT, ingredientCommand.getAmount());
-        assertEquals(DESCRIPTION, ingredientCommand.getDescription());
+        assertEquals(AMOUNT, ingredientDto.getAmount());
+        assertEquals(DESCRIPTION, ingredientDto.getDescription());
     }
 
 }

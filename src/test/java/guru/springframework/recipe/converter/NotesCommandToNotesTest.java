@@ -1,7 +1,8 @@
 package guru.springframework.recipe.converter;
 
-import guru.springframework.recipe.commands.NotesCommand;
 import guru.springframework.recipe.domain.Notes;
+import guru.springframework.recipe.web.mapper.NotesCommandToNotes;
+import guru.springframework.recipe.web.model.NotesDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,18 +29,18 @@ public class NotesCommandToNotesTest {
 
     @Test
     void testEmptyObject() throws Exception {
-        assertNotNull(converter.convert(new NotesCommand()));
+        assertNotNull(converter.convert(new NotesDto()));
     }
 
     @Test
     void convert() throws Exception {
         //given
-        final NotesCommand notesCommand = new NotesCommand();
-        notesCommand.setId(ID_VALUE);
-        notesCommand.setRecipeNotes(RECIPE_NOTES);
+        final NotesDto notesDto = new NotesDto();
+        notesDto.setId(ID_VALUE);
+        notesDto.setRecipeNotes(RECIPE_NOTES);
 
         //when
-        final Notes notes = converter.convert(notesCommand);
+        final Notes notes = converter.convert(notesDto);
 
         //then
         assertNotNull(notes);

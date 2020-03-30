@@ -1,6 +1,7 @@
 package guru.springframework.recipe.controller;
 
 import guru.springframework.recipe.service.RecipeService;
+import guru.springframework.recipe.web.controller.IndexController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,11 +1,16 @@
 package guru.springframework.recipe.converter;
 
-import guru.springframework.recipe.commands.CategoryCommand;
-import guru.springframework.recipe.commands.IngredientCommand;
-import guru.springframework.recipe.commands.NotesCommand;
-import guru.springframework.recipe.commands.RecipeCommand;
 import guru.springframework.recipe.domain.Difficulty;
 import guru.springframework.recipe.domain.Recipe;
+import guru.springframework.recipe.web.mapper.CategoryCommandToCategory;
+import guru.springframework.recipe.web.mapper.IngredientCommandToIngredient;
+import guru.springframework.recipe.web.mapper.NotesCommandToNotes;
+import guru.springframework.recipe.web.mapper.RecipeCommandToRecipe;
+import guru.springframework.recipe.web.mapper.UnitOfMeasureCommandToUnitOfMeasure;
+import guru.springframework.recipe.web.model.CategoryDto;
+import guru.springframework.recipe.web.model.IngredientDto;
+import guru.springframework.recipe.web.model.NotesDto;
+import guru.springframework.recipe.web.model.RecipeDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -45,48 +50,48 @@ public class RecipeCommandToRecipeTest {
 
     @Test
     void testEmptyObject() throws Exception {
-        assertNotNull(converter.convert(new RecipeCommand()));
+        assertNotNull(converter.convert(new RecipeDto()));
     }
 
     @Test
     void convert() throws Exception {
         //given
-        final RecipeCommand recipeCommand = new RecipeCommand();
-        recipeCommand.setId(RECIPE_ID);
-        recipeCommand.setCookTime(COOK_TIME);
-        recipeCommand.setPrepTime(PREP_TIME);
-        recipeCommand.setDescription(DESCRIPTION);
-        recipeCommand.setDifficulty(DIFFICULTY);
-        recipeCommand.setDirections(DIRECTIONS);
-        recipeCommand.setServings(SERVINGS);
-        recipeCommand.setSource(SOURCE);
-        recipeCommand.setUrl(URL);
+        final RecipeDto recipeDto = new RecipeDto();
+        recipeDto.setId(RECIPE_ID);
+        recipeDto.setCookTime(COOK_TIME);
+        recipeDto.setPrepTime(PREP_TIME);
+        recipeDto.setDescription(DESCRIPTION);
+        recipeDto.setDifficulty(DIFFICULTY);
+        recipeDto.setDirections(DIRECTIONS);
+        recipeDto.setServings(SERVINGS);
+        recipeDto.setSource(SOURCE);
+        recipeDto.setUrl(URL);
 
-        final NotesCommand notes = new NotesCommand();
+        final NotesDto notes = new NotesDto();
         notes.setId(NOTES_ID);
 
-        recipeCommand.setNotes(notes);
+        recipeDto.setNotes(notes);
 
-        final CategoryCommand category = new CategoryCommand();
+        final CategoryDto category = new CategoryDto();
         category.setId(CAT_ID_1);
 
-        final CategoryCommand category2 = new CategoryCommand();
+        final CategoryDto category2 = new CategoryDto();
         category2.setId(CAT_ID2);
 
-        recipeCommand.getCategories().add(category);
-        recipeCommand.getCategories().add(category2);
+        recipeDto.getCategories().add(category);
+        recipeDto.getCategories().add(category2);
 
-        final IngredientCommand ingredient = new IngredientCommand();
+        final IngredientDto ingredient = new IngredientDto();
         ingredient.setId(INGRED_ID_1);
 
-        final IngredientCommand ingredient2 = new IngredientCommand();
+        final IngredientDto ingredient2 = new IngredientDto();
         ingredient2.setId(INGRED_ID_2);
 
-        recipeCommand.getIngredients().add(ingredient);
-        recipeCommand.getIngredients().add(ingredient2);
+        recipeDto.getIngredients().add(ingredient);
+        recipeDto.getIngredients().add(ingredient2);
 
         //when
-        final Recipe recipe = converter.convert(recipeCommand);
+        final Recipe recipe = converter.convert(recipeDto);
 
         assertNotNull(recipe);
         assertEquals(RECIPE_ID, recipe.getId());

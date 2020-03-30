@@ -1,7 +1,8 @@
 package guru.springframework.recipe.converter;
 
-import guru.springframework.recipe.commands.NotesCommand;
 import guru.springframework.recipe.domain.Notes;
+import guru.springframework.recipe.web.mapper.NotesToNotesCommand;
+import guru.springframework.recipe.web.model.NotesDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 /**
  * Created by jt on 6/21/17.
  */
-public class NotesToNotesCommandTest {
+public class NotesToNotesDtoTest {
 
     public static final String ID_VALUE = "1";
     public static final String RECIPE_NOTES = "Notes";
@@ -31,11 +32,11 @@ public class NotesToNotesCommandTest {
         notes.setRecipeNotes(RECIPE_NOTES);
 
         //when
-        final NotesCommand notesCommand = converter.convert(notes);
+        final NotesDto notesDto = converter.convert(notes);
 
         //then
-        assertEquals(ID_VALUE, notesCommand.getId());
-        assertEquals(RECIPE_NOTES, notesCommand.getRecipeNotes());
+        assertEquals(ID_VALUE, notesDto.getId());
+        assertEquals(RECIPE_NOTES, notesDto.getRecipeNotes());
     }
 
     @Test

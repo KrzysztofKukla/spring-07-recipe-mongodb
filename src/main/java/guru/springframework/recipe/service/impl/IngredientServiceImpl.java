@@ -1,13 +1,13 @@
 package guru.springframework.recipe.service.impl;
 
-import guru.springframework.recipe.commands.IngredientCommand;
-import guru.springframework.recipe.converter.IngredientCommandToIngredient;
-import guru.springframework.recipe.converter.IngredientToIngredientCommand;
 import guru.springframework.recipe.domain.Ingredient;
 import guru.springframework.recipe.domain.UnitOfMeasure;
 import guru.springframework.recipe.repository.reactive.IngredientReactiveRepository;
 import guru.springframework.recipe.repository.reactive.UnitOfMeasureReactiveRepository;
 import guru.springframework.recipe.service.IngredientService;
+import guru.springframework.recipe.web.mapper.IngredientCommandToIngredient;
+import guru.springframework.recipe.web.mapper.IngredientToIngredientCommand;
+import guru.springframework.recipe.web.model.IngredientDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,15 +26,15 @@ public class IngredientServiceImpl implements IngredientService {
     private final IngredientCommandToIngredient ingredientCommandToIngredient;
 
     @Override
-    public Mono<IngredientCommand> findByRecipeIdAndIngredientId(String recipeId, String ingredientId) {
+    public Mono<IngredientDto> findByRecipeIdAndIngredientId(String recipeId, String ingredientId) {
         log.debug("Filtering ingredient by recipeId and ingredientId");
         Mono<Ingredient> ingredientMono = getIngredient(recipeId, ingredientId);
-        Mono<IngredientCommand> ingredientCommandMono = ingredientMono.map(i -> ingredientToIngredientCommand.convert(i));
+        Mono<IngredientDto> ingredientCommandMono = ingredientMono.map(i -> ingredientToIngredientCommand.convert(i));
         return ingredientCommandMono;
     }
 
     @Override
-    public Mono<IngredientCommand> saveIngredientCommand(IngredientCommand command) {
+    public Mono<IngredientDto> saveIngredientCommand(IngredientDto command) {
         Mono<Ingredient> ingredientMono = ingredientReactiveRepository.findByRecipeIdAndId(command.getRecipeId(), command.getId());
         Mono<UnitOfMeasure> unitOfMeasureMono = unitOfMeasureReactiveRepository.findById(command.getUnitOfMeasure().getId());
         Ingredient ingredient = ingredientMono.block();

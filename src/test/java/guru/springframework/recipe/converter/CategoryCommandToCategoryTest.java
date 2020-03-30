@@ -1,7 +1,8 @@
 package guru.springframework.recipe.converter;
 
-import guru.springframework.recipe.commands.CategoryCommand;
 import guru.springframework.recipe.domain.Category;
+import guru.springframework.recipe.web.mapper.CategoryCommandToCategory;
+import guru.springframework.recipe.web.model.CategoryDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,18 +28,18 @@ public class CategoryCommandToCategoryTest {
 
     @Test
     void testEmptyObject() throws Exception {
-        assertNotNull(conveter.convert(new CategoryCommand()));
+        assertNotNull(conveter.convert(new CategoryDto()));
     }
 
     @Test
     void convert() throws Exception {
         //given
-        final CategoryCommand categoryCommand = new CategoryCommand();
-        categoryCommand.setId(ID_VALUE);
-        categoryCommand.setDescription(DESCRIPTION);
+        final CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setId(ID_VALUE);
+        categoryDto.setDescription(DESCRIPTION);
 
         //when
-        final Category category = conveter.convert(categoryCommand);
+        final Category category = conveter.convert(categoryDto);
 
         //then
         assertEquals(ID_VALUE, category.getId());

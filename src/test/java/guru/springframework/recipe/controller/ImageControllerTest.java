@@ -1,9 +1,10 @@
 package guru.springframework.recipe.controller;
 
-import guru.springframework.recipe.commands.RecipeCommand;
-import guru.springframework.recipe.controller.exceptionhandler.ControllerExceptionHandler;
+import guru.springframework.recipe.exception.ControllerExceptionHandler;
 import guru.springframework.recipe.service.ImageService;
 import guru.springframework.recipe.service.RecipeService;
+import guru.springframework.recipe.web.controller.ImageController;
+import guru.springframework.recipe.web.model.RecipeDto;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,14 +56,14 @@ class ImageControllerTest {
     @Test
     void showUploadFormTest() throws Exception {
         //given
-        RecipeCommand recipeCommand = RecipeCommand.builder().id("1").description("description").build();
+        RecipeDto recipeDto = RecipeDto.builder().id("1").description("description").build();
 
         //when
-        BDDMockito.when(recipeService.findRecipeCommandById(ArgumentMatchers.anyString())).thenReturn(Mono.just(recipeCommand));
+        BDDMockito.when(recipeService.findRecipeCommandById(ArgumentMatchers.anyString())).thenReturn(Mono.just(recipeDto));
 
         mockMvc.perform(get("/recipe/1/image"))
             .andExpect(status().isOk())
-            .andExpect(model().attribute("recipe", Matchers.any(RecipeCommand.class)))
+            .andExpect(model().attribute("recipe", Matchers.any(RecipeDto.class)))
             .andExpect(view().name("recipe/imageuploadform"));
         BDDMockito.then(recipeService).should().findRecipeCommandById(anyString());
     }

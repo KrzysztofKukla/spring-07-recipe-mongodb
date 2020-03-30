@@ -1,20 +1,17 @@
-package guru.springframework.recipe.converter;
+package guru.springframework.recipe.web.mapper;
 
-import guru.springframework.recipe.commands.IngredientCommand;
 import guru.springframework.recipe.domain.Ingredient;
+import guru.springframework.recipe.web.model.IngredientDto;
 import lombok.Synchronized;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
-
-import javax.management.monitor.Monitor;
 
 /**
  * Created by jt on 6/21/17.
  */
 @Component
-public class IngredientToIngredientCommand implements Converter<Ingredient, IngredientCommand> {
+public class IngredientToIngredientCommand implements Converter<Ingredient, IngredientDto> {
 
     private final UnitOfMeasureToUnitOfMeasureCommand uomConverter;
 
@@ -25,20 +22,20 @@ public class IngredientToIngredientCommand implements Converter<Ingredient, Ingr
     @Synchronized
     @Nullable
     @Override
-    public IngredientCommand convert(Ingredient ingredient) {
+    public IngredientDto convert(Ingredient ingredient) {
         if (ingredient == null) {
             return null;
         }
 
-        IngredientCommand ingredientCommand = new IngredientCommand();
-        ingredientCommand.setId(ingredient.getId());
+        IngredientDto ingredientDto = new IngredientDto();
+        ingredientDto.setId(ingredient.getId());
 //        if (ingredient.getRecipe() != null) {
 //            ingredientCommand.setRecipeId(ingredient.getRecipe().getId());
 //        }
-        ingredientCommand.setAmount(ingredient.getAmount());
-        ingredientCommand.setDescription(ingredient.getDescription());
-        ingredientCommand.setUnitOfMeasure(uomConverter.convert(ingredient.getUnitOfMeasure()));
-        return ingredientCommand;
+        ingredientDto.setAmount(ingredient.getAmount());
+        ingredientDto.setDescription(ingredient.getDescription());
+        ingredientDto.setUnitOfMeasure(uomConverter.convert(ingredient.getUnitOfMeasure()));
+        return ingredientDto;
     }
 
 }

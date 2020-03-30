@@ -1,4 +1,4 @@
-package guru.springframework.recipe.commands;
+package guru.springframework.recipe.web.model;
 
 import guru.springframework.recipe.domain.Recipe;
 import lombok.Getter;
@@ -18,7 +18,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CategoryCommand {
+public class CategoryDto {
     private String id;
     private String description;
     private List<Recipe> recipes = new ArrayList<>();

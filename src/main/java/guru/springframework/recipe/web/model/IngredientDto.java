@@ -1,4 +1,4 @@
-package guru.springframework.recipe.commands;
+package guru.springframework.recipe.web.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,12 +16,12 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class IngredientCommand {
+public class IngredientDto {
     private String id;
     private String recipeId;
     private String description;
     private BigDecimal amount;
-    private UnitOfMeasureCommand unitOfMeasure;
+    private UnitOfMeasureDto unitOfMeasure;
 //    private RecipeCommand recipeCommand;
 
 }

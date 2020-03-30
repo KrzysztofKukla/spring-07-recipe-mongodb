@@ -1,7 +1,7 @@
-package guru.springframework.recipe.converter;
+package guru.springframework.recipe.web.mapper;
 
-import guru.springframework.recipe.commands.RecipeCommand;
 import guru.springframework.recipe.domain.Recipe;
+import guru.springframework.recipe.web.model.RecipeDto;
 import lombok.Synchronized;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * Created by jt on 6/21/17.
  */
 @Component
-public class RecipeCommandToRecipe implements Converter<RecipeCommand, Recipe> {
+public class RecipeCommandToRecipe implements Converter<RecipeDto, Recipe> {
 
     private final CategoryCommandToCategory categoryConverter;
     private final IngredientCommandToIngredient ingredientConverter;
@@ -27,7 +27,7 @@ public class RecipeCommandToRecipe implements Converter<RecipeCommand, Recipe> {
     @Synchronized
     @Nullable
     @Override
-    public Recipe convert(final RecipeCommand source) {
+    public Recipe convert(final RecipeDto source) {
         if (source == null) {
             return null;
         }

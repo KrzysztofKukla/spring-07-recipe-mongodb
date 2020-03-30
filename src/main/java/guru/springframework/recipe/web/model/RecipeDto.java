@@ -1,4 +1,4 @@
-package guru.springframework.recipe.commands;
+package guru.springframework.recipe.web.model;
 
 import guru.springframework.recipe.domain.Difficulty;
 import lombok.AllArgsConstructor;
@@ -23,7 +23,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RecipeCommand {
+public class RecipeDto {
     private String id;
 
     @NotBlank
@@ -50,10 +50,10 @@ public class RecipeCommand {
     private String directions;
 
     //Thymeleaf does not bind to Set, but only will bind to the list
-    private List<IngredientCommand> ingredients = new ArrayList<>();
+    private List<IngredientDto> ingredients = new ArrayList<>();
     private Difficulty difficulty;
     private Byte[] image;
-    private NotesCommand notes;
-    private List<CategoryCommand> categories = new ArrayList<>();
+    private NotesDto notes;
+    private List<CategoryDto> categories = new ArrayList<>();
 
 }

@@ -1,10 +1,11 @@
 package guru.springframework.recipe.controller;
 
-import guru.springframework.recipe.commands.RecipeCommand;
-import guru.springframework.recipe.controller.exceptionhandler.ControllerExceptionHandler;
 import guru.springframework.recipe.domain.Recipe;
+import guru.springframework.recipe.exception.ControllerExceptionHandler;
 import guru.springframework.recipe.exception.NotFoundException;
 import guru.springframework.recipe.service.RecipeService;
+import guru.springframework.recipe.web.controller.RecipeController;
+import guru.springframework.recipe.web.model.RecipeDto;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -77,20 +78,20 @@ class RecipeControllerTest {
     void showById() throws Exception {
         mockMvc.perform(get("/recipe/new"))
             .andExpect(status().isOk())
-            .andExpect(MockMvcResultMatchers.model().attribute("recipe", Matchers.any(RecipeCommand.class)))
+            .andExpect(MockMvcResultMatchers.model().attribute("recipe", Matchers.any(RecipeDto.class)))
             .andExpect(MockMvcResultMatchers.view().name("recipe/recipeForm"));
     }
 
     @Test
     void updateRecipeTest() throws Exception {
         String id = "1";
-        RecipeCommand recipeCommand = RecipeCommand.builder().id(id).description("description").build();
+        RecipeDto recipeDto = RecipeDto.builder().id(id).description("description").build();
 
-        BDDMockito.when(recipeService.findRecipeCommandById(id)).thenReturn(Mono.just(recipeCommand));
+        BDDMockito.when(recipeService.findRecipeCommandById(id)).thenReturn(Mono.just(recipeDto));
 
         mockMvc.perform(get("/recipe/1/update"))
             .andExpect(status().isOk())
-            .andExpect(MockMvcResultMatchers.model().attribute("recipe", Matchers.any(RecipeCommand.class)))
+            .andExpect(MockMvcResultMatchers.model().attribute("recipe", Matchers.any(RecipeDto.class)))
             .andExpect(MockMvcResultMatchers.view().name("recipe/recipeForm"));
         BDDMockito.then(recipeService).should().findRecipeCommandById(anyString());
     }
@@ -137,12 +138,12 @@ class RecipeControllerTest {
 
     @Test
     void saveOrUpdateTestNoValidationErrors() throws Exception {
-        RecipeCommand recipeCommand = RecipeCommand.builder().id("1").build();
+        RecipeDto recipeDto = RecipeDto.builder().id("1").build();
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("description", "abc");
         params.add("directions", "some direction");
 
-        BDDMockito.when(recipeService.saveRecipeCommand(any(RecipeCommand.class))).thenReturn(Mono.just(recipeCommand));
+        BDDMockito.when(recipeService.saveRecipeCommand(any(RecipeDto.class))).thenReturn(Mono.just(recipeDto));
 
         mockMvc.perform(post("/recipe")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -150,7 +151,7 @@ class RecipeControllerTest {
         )
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name("redirect:/recipe/1/show"));
-        BDDMockito.then(recipeService).should().saveRecipeCommand(any(RecipeCommand.class));
+        BDDMockito.then(recipeService).should().saveRecipeCommand(any(RecipeDto.class));
     }
 
 }

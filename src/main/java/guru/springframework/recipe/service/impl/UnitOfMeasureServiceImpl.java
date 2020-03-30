@@ -1,19 +1,14 @@
 package guru.springframework.recipe.service.impl;
 
-import guru.springframework.recipe.commands.UnitOfMeasureCommand;
-import guru.springframework.recipe.converter.UnitOfMeasureToUnitOfMeasureCommand;
 import guru.springframework.recipe.domain.UnitOfMeasure;
-import guru.springframework.recipe.repository.UnitOfMeasureRepository;
 import guru.springframework.recipe.repository.reactive.UnitOfMeasureReactiveRepository;
 import guru.springframework.recipe.service.UnitOfMeasureService;
+import guru.springframework.recipe.web.mapper.UnitOfMeasureToUnitOfMeasureCommand;
+import guru.springframework.recipe.web.model.UnitOfMeasureDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
 
 /**
  * @author Krzysztof Kukla
@@ -30,9 +25,9 @@ public class UnitOfMeasureServiceImpl implements UnitOfMeasureService {
     }
 
     @Override
-    public Flux<UnitOfMeasureCommand> findAllUom() {
+    public Flux<UnitOfMeasureDto> findAllUom() {
         return unitOfMeasureReactiveRepository.findAll()
-            .map(i->unitOfMeasureToUnitOfMeasureCommand.convert(i));
+            .map(i -> unitOfMeasureToUnitOfMeasureCommand.convert(i));
 //        Set<UnitOfMeasureCommand> all = new HashSet<>();
 //        unitOfMeasureRepository.findAll().forEach(i -> {
 //            all.add(unitOfMeasureToUnitOfMeasureCommand.convert(i));

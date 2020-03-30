@@ -1,7 +1,7 @@
-package guru.springframework.recipe.controller;
+package guru.springframework.recipe.web.controller;
 
-import guru.springframework.recipe.commands.RecipeCommand;
 import guru.springframework.recipe.service.RecipeService;
+import guru.springframework.recipe.web.model.RecipeDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -35,7 +35,7 @@ public class RecipeController {
 
     @GetMapping("/new")
     public String showById(Model model) {
-        model.addAttribute("recipe", new RecipeCommand());
+        model.addAttribute("recipe", new RecipeDto());
 
         return RECIPE_RECIPE_FORM_URL;
     }
@@ -55,7 +55,7 @@ public class RecipeController {
 
     @PostMapping
     //@ModelAttribute allows to bind form post parameters to RecipeCommand object
-    public String saveOrUpdate(@ModelAttribute("recipe") RecipeCommand recipe) {
+    public String saveOrUpdate(@ModelAttribute("recipe") RecipeDto recipe) {
         webDataBinder.validate();
         BindingResult bindingResult = webDataBinder.getBindingResult();
 
@@ -65,8 +65,8 @@ public class RecipeController {
             });
             return RECIPE_RECIPE_FORM_URL;
         }
-        RecipeCommand recipeCommandMono = recipeService.saveRecipeCommand(recipe).block();
-        return "redirect:/recipe/" + recipeCommandMono.getId() + "/show";
+        RecipeDto recipeDtoMono = recipeService.saveRecipeCommand(recipe).block();
+        return "redirect:/recipe/" + recipeDtoMono.getId() + "/show";
     }
 
     @GetMapping("/{id}/delete")
