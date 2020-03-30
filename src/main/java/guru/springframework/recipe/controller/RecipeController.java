@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 
@@ -35,6 +36,7 @@ public class RecipeController {
 
     @GetMapping(value = "/{id}/show")
     public String findById(@PathVariable String id, Model model) {
+        //ThymeleafTemplateEngine is gonna handle that publisher - Mono is publisher
         model.addAttribute("recipe", recipeService.findById(id));
         return "recipe/show";
     }
@@ -54,8 +56,8 @@ public class RecipeController {
             });
             return RECIPE_RECIPE_FORM_URL;
         }
-        RecipeCommand savedRecipeCommand = recipeService.saveRecipeCommand(recipe).block();
-        return "redirect:/recipe/" + savedRecipeCommand.getId() + "/show";
+        Mono<RecipeCommand> recipeCommandMono = recipeService.saveRecipeCommand(recipe);
+        return "redirect:/recipe/" + recipeCommandMono.getId() + "/show";
     }
 
     @GetMapping("/{id}/delete")
