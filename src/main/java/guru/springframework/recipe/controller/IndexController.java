@@ -23,7 +23,10 @@ public class IndexController {
 
     @RequestMapping({"","/","/index"})
     public String index(Model model){
-        model.addAttribute("recipes", recipeService.findAll().collectList().block());
+        //returning back to Flux for WebFlux Thymeleaf
+        //when Thymeleaf template picks that up and renders that,
+        // then Flux will trigger stream a data from Mongo into Thymeleaf template
+        model.addAttribute("recipes", recipeService.findAll());
         return "index";
     }
 }
