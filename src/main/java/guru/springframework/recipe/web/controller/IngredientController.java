@@ -61,12 +61,6 @@ public class IngredientController {
         return "recipe/ingredient/ingredientform";
     }
 
-    //with every request this is gonna be bound with  model.addAttribute("uomList", unitOfMeasureService.findAllUom());
-    @ModelAttribute("uomList")
-    public Flux<UnitOfMeasureDto> populateUomList() {
-        return unitOfMeasureService.findAllUom();
-    }
-
     @PostMapping("/recipe/{recipeId}/ingredient")
     public String saveOrUpdate(@ModelAttribute("ingredient") IngredientDto ingredient, @PathVariable String recipeId, Model model) {
 
@@ -102,6 +96,12 @@ public class IngredientController {
         log.debug("Deleting ingredient id -> {} ", ingredientId);
         ingredientService.deleteIngredientById(recipeId, ingredientId);
         return "redirect:/recipe/" + recipeId + "/ingredients";
+    }
+
+    //with every request this is gonna be bound with  model.addAttribute("uomList", unitOfMeasureService.findAllUom());
+    @ModelAttribute("uomList")
+    public Flux<UnitOfMeasureDto> populateUomList() {
+        return unitOfMeasureService.findAllUom();
     }
 
 }
